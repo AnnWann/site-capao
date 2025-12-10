@@ -1,6 +1,7 @@
 import { type JSX, useEffect, useRef, useState } from 'react';
 import Inicio from './sections/Inicio';
 import Acomodacoes from './sections/Acomodacoes';
+import Atrativos from './sections/Atrativos';
 import Galeria from './sections/Galeria';
 import Reservas from './sections/Reservas';
 import Localizacao from './sections/Localizacao';
@@ -11,10 +12,11 @@ export default function App(): JSX.Element {
   const isScrollingRef = useRef(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const sectionOrder = ['inicio', 'acomodacoes', 'galeria', 'reservas', 'localizacao'];
+  const sectionOrder = ['inicio', 'acomodacoes', 'atrativos', 'galeria', 'reservas', 'localizacao'];
   const sectionLabels: Record<string, string> = {
     inicio: 'Início',
     acomodacoes: 'Acomodações',
+    atrativos: 'Atrativos',
     galeria: 'Galeria',
     reservas: 'Reservas',
     localizacao: 'Localização',
@@ -99,6 +101,8 @@ export default function App(): JSX.Element {
         return <Inicio />;
       case 'acomodacoes':
         return <Acomodacoes />;
+      case 'atrativos':
+        return <Atrativos />;
       case 'galeria':
         return <Galeria />;
       case 'reservas':
@@ -157,6 +161,7 @@ export default function App(): JSX.Element {
         <div className="hidden md:flex gap-8">
           <a href="#inicio" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('inicio'); }} className="font-semibold">Início</a>
           <a href="#acomodacoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('acomodacoes'); }} className="font-semibold">Acomodações</a>
+          <a href="#atrativos" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atrativos'); }} className="font-semibold">Atrativos</a>
           <a href="#galeria" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('galeria'); }} className="font-semibold">Galeria</a>
           <a href="#reservas" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservas'); }} className="font-semibold">Reservas</a>
           <a href="#localizacao" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('localizacao'); }} className="font-semibold">Localização</a>
@@ -176,6 +181,7 @@ export default function App(): JSX.Element {
           <div className="absolute right-4 top-16 bg-white/95 text-neutral-900 rounded-lg shadow-lg p-4 flex flex-col gap-3" onClick={(e) => e.stopPropagation()}>
             <a href="#inicio" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('inicio'); }} className="font-semibold">Início</a>
             <a href="#acomodacoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('acomodacoes'); }} className="font-semibold">Acomodações</a>
+            <a href="#atrativos" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atrativos'); }} className="font-semibold">Atrativos</a>
             <a href="#galeria" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('galeria'); }} className="font-semibold">Galeria</a>
             <a href="#reservas" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservas'); }} className="font-semibold">Reservas</a>
             <a href="#localizacao" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('localizacao'); }} className="font-semibold">Localização</a>

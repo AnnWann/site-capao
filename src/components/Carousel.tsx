@@ -236,7 +236,7 @@ export default function Carousel<T>({
       )}
 
       {showDots && items.length > 1 && (
-        <div className="flex justify-center gap-2 mt-3">
+          <div className="flex justify-center gap-3 mt-3">
           {items.map((_, i) => (
             <button
               key={i}
@@ -248,7 +248,7 @@ export default function Carousel<T>({
                 else goto(i);
               }}
               aria-label={`Go to ${i + 1}`}
-              className={`w-3 h-3 rounded-full ${i === index ? 'bg-green-800' : 'bg-neutral-300'}`}
+                className={`w-3 h-3 rounded-full transition-all ${i === index ? 'bg-emerald-800 scale-110' : 'bg-gray-300'}`}
             ></button>
           ))}
         </div>

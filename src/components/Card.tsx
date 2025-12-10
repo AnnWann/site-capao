@@ -1,4 +1,5 @@
-import { type JSX, useState } from 'react';
+import { type JSX, useRef, useState } from 'react';
+import Lightbox from './Lightbox';
 
 type Props = {
   src: string;
@@ -9,14 +10,36 @@ type Props = {
 
 export default function Card({ src, title = '', heightClass = 'h-64', alt = '' }: Props): JSX.Element {
   const [isPortrait, setIsPortrait] = useState<boolean | null>(null);
+  const [open, setOpen] = useState(false);
+  const startXRef = useRef<number | null>(null);
+  const startYRef = useRef<number | null>(null);
+  const movedRef = useRef(false);
   return (
     <article className="relative rounded-2xl overflow-hidden shadow-lg bg-neutral-50 h-full flex flex-col">
       <div className={`${heightClass} w-full bg-neutral-200 overflow-hidden flex items-center justify-center`}> 
         <img
           src={src}
           alt={alt || title}
-          className={`w-full h-full block ${isPortrait === null ? 'object-cover' : isPortrait ? 'object-contain' : 'object-cover'} object-center`}
+          className={`w-full h-full block ${isPortrait === null ? 'object-cover' : isPortrait ? 'object-contain' : 'object-cover'} object-center cursor-pointer`}
           draggable={false}
+          onPointerDown={(e) => {
+            startXRef.current = e.clientX;
+            startYRef.current = e.clientY;
+            movedRef.current = false;
+          }}
+          onPointerMove={(e) => {
+            if (startXRef.current == null) return;
+            const dx = Math.abs(e.clientX - startXRef.current);
+            const dy = Math.abs(e.clientY - startYRef.current!);
+            if (dx > 6 || dy > 6) movedRef.current = true;
+          }}
+          onPointerUp={() => {
+            // only treat as click if it wasn't a drag (small movement)
+            if (!movedRef.current) setOpen(true);
+            startXRef.current = null;
+            startYRef.current = null;
+            movedRef.current = false;
+          }}
           onLoad={(e) => {
             const img = e.currentTarget as HTMLImageElement;
             // If fallback was applied, naturalWidth/naturalHeight still valid for SVG
@@ -40,6 +63,8 @@ export default function Card({ src, title = '', heightClass = 'h-64', alt = '' }
           <p className="text-lg md:text-lg font-semibold">{title}</p>
         </div>
       )}
+
+      {open && <Lightbox src={src} alt={alt || title} title={title} onClose={() => setOpen(false)} />}
     </article>
   );
 }

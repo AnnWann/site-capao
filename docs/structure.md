@@ -5,7 +5,7 @@ This file describes the main folders and important files in the repo.
 - `public/`
   - Static assets that are copied as-is to the build output. Images used by the site live under `public/fotos/`.
 - `src/`
-  - `components/` — reusable UI components (Carousel, Card, etc.)
+  - `components/` — reusable UI components (Carousel, Card, Lightbox, etc.)
   - `sections/` — each top-level page/section is a component (Inicio, Galeria, Acomodacoes, Reservas, Localizacao)
   - `util/` — helper data and utilities (`fotos.ts` exports the canonical photo list)
   - `App.tsx` — page wrapper, hash-driven navigation and transition orchestration

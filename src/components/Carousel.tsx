@@ -30,6 +30,8 @@ export default function Carousel<T>({
   const startXRef = useRef(0);
   const dragOffsetRef = useRef(0);
   const draggingRef = useRef(false);
+  const holdTimeoutRef = useRef<number | null>(null);
+  const pointerIdRef = useRef<number | null>(null);
   // dragOffset state removed; we use offsetX (px) for live transform
   const [containerWidth, setContainerWidth] = useState(0);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -97,18 +99,25 @@ export default function Carousel<T>({
   // Pointer / drag handlers
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (items.length <= 1) return;
-    const node = e.currentTarget;
-    try {
-      node.setPointerCapture(e.pointerId);
-    } catch {
-      /* ignore */
-    }
     if (isAnimatingRef.current) return;
-    draggingRef.current = true;
+    const node = e.currentTarget;
+    // Save start position and pointer id. We start actual dragging only after a short hold.
     startXRef.current = e.clientX;
     dragOffsetRef.current = 0;
     interactionRef.current = true;
-    stopAutoplay();
+    pointerIdRef.current = e.pointerId;
+    // require a small hold to begin drag so quick taps (clicks) still register on children
+    const HOLD_MS = 180;
+    if (holdTimeoutRef.current) window.clearTimeout(holdTimeoutRef.current);
+    holdTimeoutRef.current = window.setTimeout(() => {
+      // begin dragging: capture pointer and stop autoplay
+      try {
+        node.setPointerCapture(e.pointerId);
+      } catch {}
+      draggingRef.current = true;
+      stopAutoplay();
+      holdTimeoutRef.current = null;
+    }, HOLD_MS);
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -121,7 +130,19 @@ export default function Carousel<T>({
   };
 
   const finishDrag = (e?: React.PointerEvent<HTMLDivElement>) => {
-    if (!draggingRef.current) return;
+    // If a hold timer exists, cancel it (user released before hold completed)
+    if (holdTimeoutRef.current) {
+      window.clearTimeout(holdTimeoutRef.current);
+      holdTimeoutRef.current = null;
+    }
+    if (!draggingRef.current) {
+      // quick tap / no drag: just resume autoplay after short delay
+      window.setTimeout(() => {
+        interactionRef.current = false;
+        startAutoplay();
+      }, 200);
+      return;
+    }
     draggingRef.current = false;
     if (e) {
       try {

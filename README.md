@@ -31,6 +31,10 @@ Principais características
 - Sistema de navegação por hash com montagem de uma seção por vez para evitar problemas de scroll-snap
 - `Carousel` genérico com suporte a arraste por pointer, autoplay, setas e pontos de paginação
 - `Card` que adapta `object-fit` para imagens retrato/paisagem e fornece fallback SVG para imagens ausentes
+ - `Lightbox` modal: clique rápido em imagens abre uma sobreposição maior que escurece o resto da página
+
+Comportamento de interação (tap vs drag)
+- Para melhorar a usabilidade dentro de carrosséis: o carrossel exige uma breve pressão (≈180ms) antes de iniciar o arraste. Assim, um toque rápido em uma imagem abre o `Lightbox`, enquanto pressionar e arrastar manipula o carrossel.
 
 Rápido (developer) — comandos úteis
 ```bash

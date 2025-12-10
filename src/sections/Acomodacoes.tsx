@@ -8,8 +8,8 @@ export default function Acomodacoes(): JSX.Element {
   const items: Item[] = [
     { src: '/fotos/Quarto2.avif', title: 'Quartos confortáveis', heightClass: 'h-64' },
     { src: '/fotos/Suite.avif', title: 'Suíte com vista para o vale', heightClass: 'h-64' },
-    { src: '/fotos/TrilhaExterna.jpg', title: 'Área verde ampla para relaxamento', heightClass: 'h-48' },
-    { src: '/fotos/Cafe.jpg', title: 'Café da manhã artesanal', heightClass: 'h-48' },
+    { src: '/fotos/TrilhaExterna.jpg', title: 'Área verde ampla', heightClass: 'h-48' },
+    { src: '/fotos/Cafe.jpg', title: 'Café da manhã', heightClass: 'h-48' },
     { src: '/fotos/PorDoSol.jpg', title: 'Ambiente silencioso e acolhedor', heightClass: 'h-48' },
   ];
 

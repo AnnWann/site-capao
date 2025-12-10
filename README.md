@@ -8,6 +8,7 @@ Summary
 - Styling: Tailwind-style utilities
 - Dev server: Vite (`npm run dev`)
 - Build output: `dist` (used for static hosting / Vercel)
+- Access the website here: pousadagaia.com.br
 
 Quick Start
 1. Install dependencies

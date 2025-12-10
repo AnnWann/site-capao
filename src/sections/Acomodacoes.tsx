@@ -25,7 +25,7 @@ export default function Acomodacoes(): JSX.Element {
           <Carousel
             items={items}
             renderItem={(it) => (
-              <Card src={it.src} title={it.title} heightClass={it.heightClass ?? 'h-64'} />
+              <Card src={it.src} title={it.title} heightClass={'h-64'} />
             )}
             heightClass="h-64"
             interval={3500}

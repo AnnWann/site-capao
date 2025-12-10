@@ -12,9 +12,9 @@ export default function Galeria(): JSX.Element {
         <Carousel
           items={photos}
           renderItem={(p) => (
-            <Card src={p.src} title={p.title} heightClass={'h-80 md:h-[70vh]'} />
+            <Card src={p.src} title={p.title} heightClass={'h-72 md:h-[56vh]'} />
           )}
-          heightClass="h-80 md:h-[70vh]"
+          heightClass="h-72 md:h-[56vh]"
           interval={4000}
           showArrows={true}
           showDots={true}

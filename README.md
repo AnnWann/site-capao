@@ -19,55 +19,76 @@ If you are developing a production application, we recommend updating the config
 export default defineConfig([
   globalIgnores(['dist']),
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+    # Pousada Espaço Gaia — Site
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+    This repository contains the Vite + React + TypeScript site used for the Pousada Espaço Gaia.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    Summary
+    - Framework: Vite + React + TypeScript
+    - Styling: Tailwind-style utilities
+    - Dev server: Vite (`npm run dev`)
+    - Build output: `dist` (used for static hosting / Vercel)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+    Quick Start
+    1. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+    ```bash
+    npm install
+    ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    2. Run development server
+
+    ```bash
+    npm run dev
+    ```
+
+    3. Build for production
+
+    ```bash
+    npm run build
+    ```
+
+    4. Preview the `dist` folder locally
+
+    ```bash
+    npx serve dist
+    ```
+
+    Deploying
+    - The project is ready for static hosting. Vercel is recommended and auto-detects Vite projects.
+    - See `docs/deploy-vercel.md` for step-by-step instructions to deploy on Vercel and configure a `registro.br` domain.
+
+    Project structure (important files)
+    ```
+    public/                # static assets (images, banner, etc.)
+    src/
+      components/          # reusable components (Carousel, Card, etc.)
+      sections/            # page sections (Inicio, Galeria, Acomodacoes...)
+      util/                # helper data (fotos.ts)
+      App.tsx              # page wrapper and navigation
+      main.tsx             # React entry
+    package.json
+    vite.config.ts
+    docs/                  # documentation (deploy, structure, components)
+    ```
+
+    Important notes
+    - Images: add images to `public/fotos/`. Filenames are referenced from `src/util/fotos.ts`.
+    - Carousel: `src/components/Carousel.tsx` uses a 3-panel pattern (prev/current/next) and exposes `slideWidthFactor` to avoid peek.
+    - Card: `src/components/Card.tsx` now detects portrait images and uses `object-contain` to avoid severe cropping.
+
+    Useful commands
+    - `npm run dev` — start dev server
+    - `npm run build` — production build
+    - `npx serve dist` — preview production build locally
+
+    Documentation
+    - See the `docs/` folder for deploy instructions, project structure and component notes.
+
+    If you'd like, I can:
+    - Add `vercel.json` with redirect rules (www ↔ apex),
+    - Add a GitHub Action to build and deploy on push,
+    - Expand docs with accessibility or testing notes.
+
+    ---
+    Made for Pousada Espaço Gaia — tell me which doc to expand next.

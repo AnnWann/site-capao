@@ -4,7 +4,7 @@ export default function Inicio(): JSX.Element {
   const infos = [
     {
       key: 'sleep',
-      label: 'Acomoda até 8',
+      label: 'Acomoda até 6',
       svg: (
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
           <rect x="3" y="7" width="18" height="6" rx="1" stroke="currentColor" strokeWidth="1.2" />

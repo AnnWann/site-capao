@@ -1,94 +1,80 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Pousada Espaço Gaia — Site
 
-Currently, two official plugins are available:
+This repository contains the Vite + React + TypeScript site used for the Pousada Espaço Gaia.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Summary
+- Framework: Vite + React + TypeScript
+- Styling: Tailwind-style utilities
+- Dev server: Vite (`npm run dev`)
+- Build output: `dist` (used for static hosting / Vercel)
 
-## React Compiler
+Quick Start
+1. Install dependencies
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+2. Run development server
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# Pousada Espaço Gaia — Site
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    # Pousada Espaço Gaia — Site
+Este repositório contém o site estático da Pousada Espaço Gaia (Vale do Capão), construído com Vite + React + TypeScript.
 
-    This repository contains the Vite + React + TypeScript site used for the Pousada Espaço Gaia.
+Resumo do projeto
+- Propósito: site one-page com seções (Início, Acomodações, Galeria, Reservas, Localização)
+- Tech: Vite, React, TypeScript, Tailwind-style utilities
+- Imagens: armazenadas em `public/fotos/`
 
-    Summary
-    - Framework: Vite + React + TypeScript
-    - Styling: Tailwind-style utilities
-    - Dev server: Vite (`npm run dev`)
-    - Build output: `dist` (used for static hosting / Vercel)
+Principais características
+- Sistema de navegação por hash com montagem de uma seção por vez para evitar problemas de scroll-snap
+- `Carousel` genérico com suporte a arraste por pointer, autoplay, setas e pontos de paginação
+- `Card` que adapta `object-fit` para imagens retrato/paisagem e fornece fallback SVG para imagens ausentes
 
-    Quick Start
-    1. Install dependencies
+Rápido (developer) — comandos úteis
+```bash
+npm install        # instalar dependências
+npm run dev        # rodar servidor de desenvolvimento (Vite)
+npm run build      # gerar build para produção em `dist`
+npx serve dist     # visualizar `dist` localmente (opcional)
+```
 
-    ```bash
-    npm install
-    ```
+Executar localmente
+1. Instale dependências: `npm install`
+2. Inicie o servidor: `npm run dev`
+3. Abra `http://localhost:5173` (ou a porta informada pelo Vite)
 
-    2. Run development server
+Deploy
+- O projeto gera uma pasta `dist` que pode ser publicada em Vercel, Netlify, GitHub Pages ou qualquer host estático.
+- Instruções detalhadas de deploy (Vercel + registro.br) estão em `docs/deploy-vercel.md`.
 
-    ```bash
-    npm run dev
-    ```
+Estrutura importante
+```
+public/                # assets estáticos (banner.jpg, fotos/ ...)
+src/
+  components/          # Carousel, Card, etc.
+  sections/            # Inicio, Galeria, Acomodacoes, Reservas, Localizacao
+  util/                # `fotos.ts` lista as imagens em `public/fotos/`
+  App.tsx              # wrapper da página e navegação por hash
+  main.tsx             # ponto de entrada React
+docs/                  # documentação (deploy, estrutura, componentes)
+```
 
-    3. Build for production
+Notas de manutenção
+- Ao adicionar/remover imagens, atualize `src/util/fotos.ts` com os nomes corretos.
+- Se quiser ajustar o comportamento do carrossel (tamanho do slide, autoplay), veja `src/components/Carousel.tsx`.
 
-    ```bash
-    npm run build
-    ```
+Contribuição e deploy automático
+- Recomendo manter o repositório em GitHub e conectar ao Vercel para deploy automático em pushes.
+- Se preferir fallback automático (por exemplo durante incidentes do Vercel), posso adicionar um workflow do GitHub Actions que publica para Netlify ou GitHub Pages.
 
-    4. Preview the `dist` folder locally
+Contato e créditos
+- Desenvolvido para Pousada Espaço Gaia
+- Para ajustes de conteúdo (textos, imagens) edite os arquivos em `src/sections/` e `public/fotos/`.
 
-    ```bash
-    npx serve dist
-    ```
+Licença
+- Código fornecido sem licença específica (adicione uma LICENSE se desejar).
 
-    Deploying
-    - The project is ready for static hosting. Vercel is recommended and auto-detects Vite projects.
-    - See `docs/deploy-vercel.md` for step-by-step instructions to deploy on Vercel and configure a `registro.br` domain.
-
-    Project structure (important files)
-    ```
-    public/                # static assets (images, banner, etc.)
-    src/
-      components/          # reusable components (Carousel, Card, etc.)
-      sections/            # page sections (Inicio, Galeria, Acomodacoes...)
-      util/                # helper data (fotos.ts)
-      App.tsx              # page wrapper and navigation
-      main.tsx             # React entry
-    package.json
-    vite.config.ts
-    docs/                  # documentation (deploy, structure, components)
-    ```
-
-    Important notes
-    - Images: add images to `public/fotos/`. Filenames are referenced from `src/util/fotos.ts`.
-    - Carousel: `src/components/Carousel.tsx` uses a 3-panel pattern (prev/current/next) and exposes `slideWidthFactor` to avoid peek.
-    - Card: `src/components/Card.tsx` now detects portrait images and uses `object-contain` to avoid severe cropping.
-
-    Useful commands
-    - `npm run dev` — start dev server
-    - `npm run build` — production build
-    - `npx serve dist` — preview production build locally
-
-    Documentation
-    - See the `docs/` folder for deploy instructions, project structure and component notes.
-
-    If you'd like, I can:
-    - Add `vercel.json` with redirect rules (www ↔ apex),
-    - Add a GitHub Action to build and deploy on push,
-    - Expand docs with accessibility or testing notes.
-
-    ---
-    Made for Pousada Espaço Gaia — tell me which doc to expand next.
+---
+Se quiser, eu adapto esse README para incluir instruções de deploy automáticas (GitHub Actions) ou um `vercel.json` com redirects canonical.

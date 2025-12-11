@@ -279,8 +279,8 @@ export default function App(): JSX.Element {
 
       {/* Mobile overlay menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden bg-black/50" onClick={() => setMobileMenuOpen(false)}>
-          <div className="absolute right-4 top-16 bg-white/95 text-neutral-900 rounded-lg shadow-lg p-4 flex flex-col gap-3" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 md:hidden bg-black/50" onClick={() => setMobileMenuOpen(false)}>
+          <div className="absolute right-4 top-16 bg-white/95 text-neutral-900 rounded-lg shadow-lg p-4 flex flex-col gap-3 z-50" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between gap-3 px-2">
               <div className="text-sm font-semibold">{translate(locale,'label.language')}</div>
               <div>

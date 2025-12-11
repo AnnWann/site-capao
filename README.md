@@ -34,6 +34,12 @@ Principais características
 - `Card` que adapta `object-fit` para imagens retrato/paisagem e fornece fallback SVG para imagens ausentes
  - `Lightbox` modal: clique rápido em imagens abre uma sobreposição maior que escurece o resto da página
 
+Recent changes / developer notes
+- Added a new section **Atrações Turísticas** implemented in `src/sections/Atracoes.tsx`. It displays a carousel of nearby waterfalls (image + name + distance/walking time). Images for these attractions are stored under `public/fotos/cachoeiras/` (you can swap these for local or remote URLs).
+- The infos area on the hero was refactored into a reusable `InfoGrid` component (`src/components/InfoGrid.tsx`) and the page-specific data moved to `src/util/infos.ts`.
+- Icons were centralized in `src/icons/` and the project now uses `lucide-react` for consistent icon rendering.
+- The `Carousel` component gained a few props used across the site: `renderDot`, `hideDotsOnMobile`, and `slideWidthFactor` (useful to avoid edge-peeking on responsive slides).
+
 Comportamento de interação (tap vs drag)
 - Para melhorar a usabilidade dentro de carrosséis: o carrossel exige uma breve pressão (≈180ms) antes de iniciar o arraste. Assim, um toque rápido em uma imagem abre o `Lightbox`, enquanto pressionar e arrastar manipula o carrossel.
 
@@ -69,6 +75,13 @@ docs/                  # documentação (deploy, estrutura, componentes)
 Notas de manutenção
 - Ao adicionar/remover imagens, atualize `src/util/fotos.ts` com os nomes corretos.
 - Se quiser ajustar o comportamento do carrossel (tamanho do slide, autoplay), veja `src/components/Carousel.tsx`.
+
+How to preview changes locally
+- Install dependencies: `npm install`
+- Run the dev server: `npm run dev`
+- Open the site at the URL shown by Vite (typically `http://localhost:5173`)
+
+If you add images for attractions, place them under `public/fotos/cachoeiras/` and reference their filenames in `src/sections/Atracoes.tsx` (or update `src/util/fotos.ts` to centralize them).
 
 Contribuição e deploy automático
 - Recomendo manter o repositório em GitHub e conectar ao Vercel para deploy automático em pushes.

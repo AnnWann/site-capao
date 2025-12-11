@@ -7,6 +7,8 @@ This file describes the main folders and important files in the repo.
 - `src/`
   - `components/` — reusable UI components (Carousel, Card, Lightbox, etc.)
   - `sections/` — each top-level page/section is a component (Inicio, Galeria, Acomodacoes, Reservas, Localizacao)
+  - `sections/` — each top-level page/section is a component (Inicio, Galeria, Acomodacoes, Reservas, Localizacao)
+    - New: `Atracoes.tsx` — Atrações Turísticas (waterfalls) carousel. Images for nearby attractions can live in `public/fotos/cachoeiras/`.
   - `util/` — helper data and utilities (`fotos.ts` exports the canonical photo list)
   - `App.tsx` — page wrapper, hash-driven navigation and transition orchestration
   - `main.tsx` — React entry (mount point)

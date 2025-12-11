@@ -46,17 +46,17 @@ export default function Atracoes(): JSX.Element {
   ];
 
   return (
-    <section id="atracoes" className="h-full flex items-center bg-neutral-50 text-gray-800">
+    <section id="atracoes" className="h-full flex items-center bg-neutral-50 text-gray-800 pb-24 md:pb-0">
       <div className="max-w-5xl mx-auto px-6 w-full pt-8 md:pt-12">
         <h2 className="text-3xl font-semibold mb-4">{t('nav.atracoes') || 'Atrações Turísticas'}</h2>
-        <p className="mb-6 text-gray-600 hidden md:block">{t('atracoes.info') ?? 'Cachoeiras próximas à pousada'}</p>
+        <p className="mb-4 text-gray-600 text-sm md:text-base">{t('atracoes.info') ?? 'Cachoeiras próximas à pousada'}</p>
 
         <div className="px-2 md:px-0">
           <Carousel
             items={waterfalls}
             renderItem={(wf: Waterfall) => (
-              <div className="h-full flex flex-col md:flex-row items-stretch gap-4 p-4">
-                <div className="flex-none w-full md:w-1/2 h-72 md:h-full rounded-lg overflow-hidden bg-gray-200">
+              <div className="flex flex-col md:flex-row items-stretch gap-4 p-4">
+                <div className="flex-none w-full md:w-1/2 h-44 md:h-full rounded-lg overflow-hidden bg-gray-200">
                   <img src={wf.image} alt={wf.name} className="w-full h-full object-cover" />
                 </div>
 

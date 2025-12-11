@@ -1,64 +1,69 @@
-import { type JSX } from 'react';
+import { type JSX, useState } from 'react';
+import { useLocale } from '../contexts/LocaleContext';
+import InfoGrid, { type InfoItemType } from '../components/InfoGrid';
+import { buildInicioInfos } from '../util/infos';
+import Modal from '../components/Modal';
 
 export default function Inicio(): JSX.Element {
-  const infos = [
-    {
-      key: 'sleep',
-      label: 'Acomoda até 6',
-      svg: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-          <rect x="3" y="7" width="18" height="6" rx="1" stroke="currentColor" strokeWidth="1.2" />
-          <path d="M3 13v3M21 13v3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-        </svg>
-      ),
-    },
-    {
-      key: 'wifi',
-      label: 'Wi‑Fi',
-      svg: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-          <path d="M2 8.5c6-4.5 14-4.5 20 0" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M6.5 12c3.2-2.3 7.8-2.3 11 0" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M11 17h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
-      ),
-    },
-    {
-      key: 'dist',
-      label: '2 km da vila',
-      svg: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-          <path d="M12 2v20M5 7l7-5 7 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      ),
-    },
-  ];
+  const { t } = useLocale();
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const items: InfoItemType[] = buildInicioInfos(t);
 
   return (
-    <header id="inicio" className="h-screen w-full bg-cover bg-center flex flex-col justify-center items-center text-white relative" style={{ backgroundImage: "url('/banner.jpg')" }}>
-      <h1 className="text-5xl font-bold drop-shadow-xl">Pousada Espaço Gaia</h1>
-      <p className="text-2xl mt-4 drop-shadow-lg">Vale do Capão – Chapada Diamantina</p>
-      <p className="text-xl mt-2 drop-shadow-lg italic">natureza e conforto em harmonia</p>
+    <header id="inicio" className="h-screen w-full bg-cover bg-center flex flex-col justify-center items-center text-white relative" style={{ backgroundImage: "url('/fotos/CasaCompleta3.avif')" }}>
+      <div className="relative z-10 flex flex-col items-center">
+        <h1 className="text-5xl font-bold drop-shadow-xl">{t('inicio.title')}</h1>
+        <p className="text-2xl mt-4 drop-shadow-lg">{t('inicio.subtitle')}</p>
+        <p className="text-xl mt-2 drop-shadow-lg italic">{t('inicio.tagline')}</p>
 
-      <div className="mt-10 w-full max-w-3xl px-6">
-        <div className="flex flex-wrap justify-center gap-4">
-          {infos.map((it) => (
-            <div key={it.key} className="w-1/2 sm:w-auto flex flex-col items-center">
-              <div className="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center text-emerald-800 shadow-lg">
-                {it.svg}
+      <div className="mt-10 w-full max-w-3xl px-6 mx-auto">
+        {/* Desktop / larger screens: show grid inline */}
+        <div className="hidden md:flex md:justify-center">
+          <InfoGrid items={items} />
+        </div>
+
+        {/* Mobile: show a single button that opens a modal with the infos */}
+        <div className="md:hidden">
+          <button
+            type="button"
+            onClick={() => setModalOpen(true)}
+            className="w-full bg-white/90 text-emerald-800 rounded-lg py-3 shadow-md flex items-center justify-center font-medium"
+          >
+            {t('inicio.more_infos')}
+          </button>
+
+          {modalOpen && (
+            <Modal title={t('inicio.more_infos')} onClose={() => setModalOpen(false)}>
+              <div className="p-2">
+                <InfoGrid items={items} labelClass="text-gray-800" />
               </div>
-              <span className="mt-2 text-sm font-medium text-white drop-shadow">{it.label}</span>
-            </div>
-          ))}
+            </Modal>
+          )}
+        </div>
+
+        {/* Booking button */}
+        <div className="mt-6 flex justify-center">
+          <a
+            href="#reservas"
+            className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors"
+          >
+            {t('inicio.book') ?? 'Reservar'}
+          </a>
         </div>
       </div>
 
-      {/* Vinheta / foco de filme: overlay radial para escurecer bordas */}
-      <div className="absolute inset-0 pointer-events-none">
+      </div>
+
+      {/* Full dark overlay to improve text legibility (subtle) */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-black/40" />
+        {/* retain subtle radial vignette on top of the dark overlay for focus */}
         <div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%)'
+            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%)'
           }}
         />
       </div>

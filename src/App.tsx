@@ -82,6 +82,81 @@ export default function App(): JSX.Element {
     return () => window.removeEventListener('wheel', onWheel as EventListener);
   }, [currentSection]);
 
+  // touch navigation: swipe up/down on mobile to change sections
+  const touchStartYRef = useRef<number | null>(null);
+  const touchMovedRef = useRef(false);
+  const touchStartTimeRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const el = containerRef.current || window;
+    const THRESHOLD_PX = 60; // required px to consider a swipe
+
+    const onTouchStart = (ev: Event) => {
+      const tev = ev as TouchEvent;
+      if (!tev.touches || tev.touches.length !== 1) return;
+      touchStartYRef.current = tev.touches[0].clientY;
+      touchStartTimeRef.current = Date.now();
+      touchMovedRef.current = false;
+    };
+
+    const onTouchMove = (ev: Event) => {
+      const tev = ev as TouchEvent;
+      if (touchStartYRef.current == null) return;
+      const y = tev.touches[0].clientY;
+      const dy = y - touchStartYRef.current;
+      if (Math.abs(dy) > 8) {
+        touchMovedRef.current = true;
+        // prevent the default subtle bounce/scroll on some devices
+        tev.preventDefault();
+      }
+    };
+
+    const onTouchEnd = (ev: Event) => {
+      const tev = ev as TouchEvent;
+      if (touchStartYRef.current == null) return;
+      const touch = (tev.changedTouches && tev.changedTouches[0]) ? tev.changedTouches[0] : null;
+      const endY = touch ? touch.clientY : null;
+      if (endY == null) {
+        touchStartYRef.current = null;
+        return;
+      }
+      const dy = endY - touchStartYRef.current;
+
+      // only act on an intentional swipe (enough distance)
+      if (!isScrollingRef.current && touchMovedRef.current && Math.abs(dy) > THRESHOLD_PX) {
+        isScrollingRef.current = true;
+        const dir = dy < 0 ? 1 : -1; // dy<0 means user swiped up -> next section
+        const idx = sectionOrder.indexOf(currentSection);
+        const nextIdx = Math.max(0, Math.min(sectionOrder.length - 1, idx + dir));
+        if (nextIdx !== idx) scrollToSection(sectionOrder[nextIdx]);
+
+        // small debounce to avoid multiple triggers
+        window.setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 250);
+      }
+
+      touchStartYRef.current = null;
+      touchMovedRef.current = false;
+      touchStartTimeRef.current = null;
+    };
+
+    // attach
+    el.addEventListener('touchstart', onTouchStart as EventListener, { passive: true } as AddEventListenerOptions);
+    el.addEventListener('touchmove', onTouchMove as EventListener, { passive: false } as AddEventListenerOptions);
+    el.addEventListener('touchend', onTouchEnd as EventListener, { passive: true } as AddEventListenerOptions);
+
+    return () => {
+      try {
+        el.removeEventListener('touchstart', onTouchStart as EventListener);
+        el.removeEventListener('touchmove', onTouchMove as EventListener);
+        el.removeEventListener('touchend', onTouchEnd as EventListener);
+      } catch {
+        // ignore
+      }
+    };
+  }, [currentSection]);
+
   // transition state
   const TRANSITION_MS = 700;
   const [prevSection, setPrevSection] = useState<string | null>(null);

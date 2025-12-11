@@ -2,9 +2,12 @@ import { type JSX, useEffect, useRef, useState } from 'react';
 import Inicio from './sections/Inicio';
 import Acomodacoes from './sections/Acomodacoes';
 import Atrativos from './sections/Atrativos';
+import Atracoes from './sections/Atracoes';
 import Galeria from './sections/Galeria';
 import Reservas from './sections/Reservas';
 import Localizacao from './sections/Localizacao';
+import LanguageToggle from './components/LanguageToggle';
+import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
 
 export default function App(): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -12,15 +15,7 @@ export default function App(): JSX.Element {
   const isScrollingRef = useRef(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const sectionOrder = ['inicio', 'acomodacoes', 'atrativos', 'galeria', 'reservas', 'localizacao'];
-  const sectionLabels: Record<string, string> = {
-    inicio: 'Início',
-    acomodacoes: 'Acomodações',
-    atrativos: 'Atrativos',
-    galeria: 'Galeria',
-    reservas: 'Reservas',
-    localizacao: 'Localização',
-  };
+  const sectionOrder = ['inicio', 'acomodacoes', 'atrativos', 'atracoes', 'galeria', 'reservas', 'localizacao'];
 
   const setHash = (id: string) => {
     try {
@@ -103,6 +98,8 @@ export default function App(): JSX.Element {
         return <Acomodacoes />;
       case 'atrativos':
         return <Atrativos />;
+      case 'atracoes':
+        return <Atracoes />;
       case 'galeria':
         return <Galeria />;
       case 'reservas':
@@ -117,6 +114,16 @@ export default function App(): JSX.Element {
   const idx = sectionOrder.indexOf(currentSection);
   const prev = idx > 0 ? sectionOrder[idx - 1] : '';
   const next = idx < sectionOrder.length - 1 ? sectionOrder[idx + 1] : '';
+  const [locale, setLocale] = useState<Locale>(() => {
+    try {
+      const stored = window.localStorage.getItem('locale');
+      if (stored === 'pt-BR' || stored === 'en-US') return stored as Locale;
+      const nav = navigator.language || 'en-US';
+      return nav.toLowerCase().startsWith('pt') ? 'pt-BR' : 'en-US';
+    } catch {
+      return 'en-US';
+    }
+  });
 
   // cleanup transition timer on unmount
   useEffect(() => {
@@ -126,7 +133,8 @@ export default function App(): JSX.Element {
   }, []);
 
   return (
-    <div ref={containerRef} className="font-sans bg-neutral-100 text-neutral-900 h-screen w-screen overflow-hidden relative">
+    <LocaleContext.Provider value={{ locale, setLocale, t: (k: string) => translate(locale, k) }}>
+      <div ref={containerRef} className="font-sans bg-neutral-100 text-neutral-900 h-screen w-screen overflow-hidden relative">
       <style>{`
         /* Reset and prevent small scrollbars caused by body/page gaps */
         html, body, #root { height: 100%; margin: 0; padding: 0; }
@@ -152,39 +160,66 @@ export default function App(): JSX.Element {
       `}</style>
 
       {/* NAVBAR */}
-      <nav className={`fixed top-0 left-0 w-full py-4 z-50 flex items-center justify-between px-4 ${currentSection !== 'inicio' ? 'bg-green-800 text-white shadow-md' : 'bg-transparent text-white/0'}`}>
+      <nav
+        aria-hidden={currentSection === 'inicio'}
+        className={`fixed top-0 left-0 w-full py-4 z-50 flex items-center justify-between px-4 ${currentSection !== 'inicio' ? 'bg-green-800 text-white shadow-md' : 'bg-transparent text-white/0 pointer-events-none select-none'}`}>
         <div className="flex items-center gap-6">
           <div className="text-lg font-bold">Pousada Espaço Gaia</div>
         </div>
 
         {/* Desktop links */}
-        <div className="hidden md:flex gap-8">
-          <a href="#inicio" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('inicio'); }} className="font-semibold">Início</a>
-          <a href="#acomodacoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('acomodacoes'); }} className="font-semibold">Acomodações</a>
-          <a href="#atrativos" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atrativos'); }} className="font-semibold">Atrativos</a>
-          <a href="#galeria" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('galeria'); }} className="font-semibold">Galeria</a>
-          <a href="#reservas" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservas'); }} className="font-semibold">Reservas</a>
-          <a href="#localizacao" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('localizacao'); }} className="font-semibold">Localização</a>
+        <div className="hidden md:flex gap-8 items-center">
+          <a href="#inicio" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('inicio'); }} className="font-semibold">{translate(locale,'nav.inicio')}</a>
+          <a href="#acomodacoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('acomodacoes'); }} className="font-semibold">{translate(locale,'nav.acomodacoes')}</a>
+          <a href="#atrativos" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atrativos'); }} className="font-semibold">{translate(locale,'nav.atrativos')}</a>
+          <a href="#atracoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atracoes'); }} className="font-semibold">{translate(locale,'nav.atracoes') ?? 'Atrações'}</a>
+          <a href="#galeria" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('galeria'); }} className="font-semibold">{translate(locale,'nav.galeria')}</a>
+          <a href="#reservas" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservas'); }} className="font-semibold">{translate(locale,'nav.reservas')}</a>
+          <a href="#localizacao" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('localizacao'); }} className="font-semibold">{translate(locale,'nav.localizacao')}</a>
+          {/* Language toggle shown inside navbar on non-inicio (desktop) */}
+          {currentSection !== 'inicio' && (
+            <div className="ml-4">
+              <LanguageToggle value={locale} onChange={setLocale} compact />
+            </div>
+          )}
         </div>
 
-        {/* Mobile burger */}
-        <div className="md:hidden">
-          <button aria-label="Menu" onClick={() => setMobileMenuOpen((s) => !s)} className="p-2 rounded-md bg-white/10">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/></svg>
-          </button>
-        </div>
+        {/* placeholder to keep nav height stable */}
+        <div className="md:hidden" />
       </nav>
+
+      {/* Floating language toggle on Inicio (small and slim) - visible on all sizes so it's separate from the navbar */}
+      {currentSection === 'inicio' && (
+        <div className="fixed top-4 right-20 z-50">
+          <LanguageToggle value={locale} onChange={setLocale} compact />
+        </div>
+      )}
+
+      {/* Mobile burger (moved out of nav so it remains clickable when nav is inert) */}
+      <div className="fixed top-[14px] right-4 z-50 md:hidden">
+        <button aria-label="Menu" aria-controls="mobile-menu" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((s) => !s)} className="p-2 rounded-md bg-white/10">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
 
       {/* Mobile overlay menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden bg-black/50" onClick={() => setMobileMenuOpen(false)}>
           <div className="absolute right-4 top-16 bg-white/95 text-neutral-900 rounded-lg shadow-lg p-4 flex flex-col gap-3" onClick={(e) => e.stopPropagation()}>
-            <a href="#inicio" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('inicio'); }} className="font-semibold">Início</a>
-            <a href="#acomodacoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('acomodacoes'); }} className="font-semibold">Acomodações</a>
-            <a href="#atrativos" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atrativos'); }} className="font-semibold">Atrativos</a>
-            <a href="#galeria" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('galeria'); }} className="font-semibold">Galeria</a>
-            <a href="#reservas" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservas'); }} className="font-semibold">Reservas</a>
-            <a href="#localizacao" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('localizacao'); }} className="font-semibold">Localização</a>
+            <div className="flex items-center justify-between gap-3 px-2">
+              <div className="text-sm font-semibold">{translate(locale,'label.language')}</div>
+              <div>
+                <LanguageToggle value={locale} onChange={setLocale} compact />
+              </div>
+            </div>
+            <div className="h-px bg-neutral-200 my-2" />
+            <a href="#inicio" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('inicio'); }} className="font-semibold">{translate(locale,'nav.inicio')}</a>
+            <a href="#acomodacoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('acomodacoes'); }} className="font-semibold">{translate(locale,'nav.acomodacoes')}</a>
+            <a href="#atrativos" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atrativos'); }} className="font-semibold">{translate(locale,'nav.atrativos')}</a>
+            <a href="#atracoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atracoes'); }} className="font-semibold">{translate(locale,'nav.atracoes') ?? 'Atrações'}</a>
+            <a href="#galeria" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('galeria'); }} className="font-semibold">{translate(locale,'nav.galeria')}</a>
+            <a href="#reservas" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservas'); }} className="font-semibold">{translate(locale,'nav.reservas')}</a>
+            <a href="#localizacao" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('localizacao'); }} className="font-semibold">{translate(locale,'nav.localizacao')}</a>
           </div>
         </div>
       )}
@@ -212,15 +247,18 @@ export default function App(): JSX.Element {
       {/* Arrows */}
       {prev && (
         <button onClick={() => prev && scrollToSection(prev)} aria-label="Subir" className="fixed top-24 md:top-16 left-1/2 -translate-x-1/2 z-40">
-          <div className="mb-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900">{sectionLabels[prev]}</div>
+            <div className="mb-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900">{translate(locale, `nav.${prev}`)}</div>
           <div className={`text-4xl font-bold ${currentSection === 'inicio' ? 'text-white' : 'text-neutral-900'}`}>↑</div>
         </button>
       )}
 
       {next && (
         <button onClick={() => next && scrollToSection(next)} aria-label="Descer" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-          <div className={`text-4xl font-bold ${currentSection === 'inicio' ? 'text-white' : 'text-neutral-900'}`}>↓</div>
-          <div className="mt-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900">{sectionLabels[next]}</div>
+          {/* Emphasize arrow on inicio */}
+          <div className={`flex flex-col items-center ${currentSection === 'inicio' ? 'scale-110' : ''}`}>
+            <div className={`${currentSection === 'inicio' ? 'tiny-bounce text-7xl md:text-6xl font-extrabold text-white' : 'text-4xl font-bold text-neutral-900'}`}>↓</div>
+            <div className={`mt-2 ${currentSection === 'inicio' ? 'text-base md:text-sm font-semibold px-3 py-1 rounded-md shadow bg-white/90 text-neutral-900' : 'mt-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900'}`}>{translate(locale, `nav.${next}`)}</div>
+          </div>
         </button>
       )}
 
@@ -228,13 +266,14 @@ export default function App(): JSX.Element {
       {currentSection === 'localizacao' && (
         <div className="fixed bottom-0 left-0 w-full z-50">
           <div className="bg-green-900 text-white px-6 py-3 text-center">
-            <p className="text-sm font-semibold">Contato</p>
-            <p className="text-xs">WhatsApp: (71) 99220-6321</p>
-            <p className="text-xs">Email: contato@espacogaia.com</p>
-            <p className="text-xs opacity-80">© 2025 Pousada Espaço Gaia</p>
+            <p className="text-sm font-semibold">{translate(locale,'footer.contato')}</p>
+            <p className="text-xs">{translate(locale,'footer.whatsapp')}: (71) 99220-6321</p>
+            <p className="text-xs">{translate(locale,'footer.email')}: contato@espacogaia.com</p>
+            <p className="text-xs opacity-80">{translate(locale,'footer.copy')}</p>
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </LocaleContext.Provider>
   );
 }

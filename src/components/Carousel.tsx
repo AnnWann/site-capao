@@ -11,6 +11,10 @@ export type CarouselProps<T> = {
   // fraction of the wrapper width each slide should occupy (0 < v <= 1)
   // e.g. 0.98 keeps slides slightly inset so next slide doesn't peek
   slideWidthFactor?: number;
+  // optional custom dot renderer: receives the item, its index and whether it's active
+  renderDot?: (item: T, index: number, active: boolean) => JSX.Element;
+  // hide dots on small screens (show only on md+)
+  hideDotsOnMobile?: boolean;
 };
 
 export default function Carousel<T>({
@@ -22,6 +26,8 @@ export default function Carousel<T>({
   showArrows = true,
   className = '',
   slideWidthFactor = 1,
+  renderDot,
+  hideDotsOnMobile = false,
 }: CarouselProps<T>): JSX.Element {
   const [index, setIndex] = useState(0);
   const autoplayRef = useRef<number | null>(null);
@@ -236,21 +242,30 @@ export default function Carousel<T>({
       )}
 
       {showDots && items.length > 1 && (
-          <div className="flex justify-center gap-3 mt-3">
-          {items.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                const nextI = (index + 1) % items.length;
-                const prevI = (index - 1 + items.length) % items.length;
-                if (i === nextI) animateDirection(1);
-                else if (i === prevI) animateDirection(-1);
-                else goto(i);
-              }}
-              aria-label={`Go to ${i + 1}`}
-                className={`w-3 h-3 rounded-full transition-all ${i === index ? 'bg-emerald-800 scale-110' : 'bg-gray-300'}`}
-            ></button>
-          ))}
+        <div className={`${hideDotsOnMobile ? 'hidden md:flex' : 'flex'} justify-center gap-3 mt-3`}>
+          {items.map((it, i) => {
+            const active = i === index;
+            return (
+              <button
+                key={i}
+                onClick={() => {
+                  const nextI = (index + 1) % items.length;
+                  const prevI = (index - 1 + items.length) % items.length;
+                  if (i === nextI) animateDirection(1);
+                  else if (i === prevI) animateDirection(-1);
+                  else goto(i);
+                }}
+                aria-label={`Go to ${i + 1}`}
+                className={`flex items-center justify-center p-1 rounded transition-all ${active ? 'scale-110' : ''}`}
+              >
+                {typeof (renderDot as any) === 'function' ? (
+                  renderDot!(it, i, active)
+                ) : (
+                  <span className={`${active ? 'bg-emerald-800' : 'bg-gray-300'} w-3 h-3 rounded-full block`} />
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

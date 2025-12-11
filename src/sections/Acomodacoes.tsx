@@ -12,7 +12,7 @@ export default function Acomodacoes(): JSX.Element {
     { src: '/fotos/Suite.avif', title: t('acomodacoes.quartoSuite'), heightClass: 'h-64' },
     { src: '/fotos/TrilhaExterna.jpg', title: t('acomodacoes.areaVerde'), heightClass: 'h-48' },
     { src: '/fotos/Fogueira.webp', title: t('acomodacoes.fogueira'), heightClass: 'h-48' },
-    { src: '/fotos/Garagem.jpg', title: t('acomodacoes.garagem'), heightClass: 'h-48' },
+    { src: '/fotos/garagem.jpg', title: t('acomodacoes.garagem'), heightClass: 'h-48' },
   ];
 
   // We'll use the reusable Carousel component for mobile

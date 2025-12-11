@@ -48,6 +48,8 @@ export const photos: item[] = [
   { src: '/fotos/Lavanderia2.avif', pt_br: 'Lavanderia', en_us: 'Laundry' },
   { src: '/fotos/PorDoSol.jpg', pt_br: 'Pôr do sol', en_us: 'Sunset', heightClass: 'h-64' },
   { src: '/fotos/Portao.avif', pt_br: 'Portão', en_us: 'Gate' },
+  { src: '/fotos/portao.jpg', pt_br: 'Portão', en_us: 'Gate' },
+  { src: '/fotos/garagem.jpg', pt_br: 'Garagem', en_us: 'Garage' },
   
   { src: '/fotos/TrilhaEntrada.avif', pt_br: 'Trilha de entrada', en_us: 'Entrance Trail' },
   { src: '/fotos/TrilhaExterna.jpg', pt_br: 'Trilha externa', en_us: 'External Trail' },

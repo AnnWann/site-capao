@@ -13,10 +13,23 @@ export default function Inicio(): JSX.Element {
 
   return (
     <header id="inicio" className="h-screen w-full bg-cover bg-center flex flex-col justify-center items-center text-white relative" style={{ backgroundImage: "url('/fotos/CasaCompleta3.avif')" }}>
-      <div className="relative z-10 flex flex-col items-center">
-        <h1 className="text-5xl font-bold drop-shadow-xl">{t('inicio.title')}</h1>
-        <p className="text-2xl mt-4 drop-shadow-lg">{t('inicio.subtitle')}</p>
-        <p className="text-xl mt-2 drop-shadow-lg italic">{t('inicio.tagline')}</p>
+      <div className="relative z-10 flex flex-col items-center text-center px-4">
+        {/* Split the title so mobile shows two centered lines: "Pousada" / "Espaço Gaia" */}
+        {(() => {
+          const full = t('inicio.title');
+          const parts = full.split(' ');
+          const first = parts.slice(0, 1).join(' ');
+          const rest = parts.slice(1).join(' ');
+          return (
+            <h1 className="font-bold drop-shadow-xl leading-tight">
+              <span className="block text-3xl md:text-5xl">{first}</span>
+              <span className="block text-4xl md:text-6xl">{rest}</span>
+            </h1>
+          );
+        })()}
+
+        <p className="mt-3 text-sm md:text-2xl drop-shadow-lg max-w-full">{t('inicio.subtitle')}</p>
+        <p className="text-xs md:text-xl mt-2 drop-shadow-lg italic max-w-full">{t('inicio.tagline')}</p>
 
       <div className="mt-10 w-full max-w-3xl px-6 mx-auto">
         {/* Desktop / larger screens: show grid inline */}

@@ -1,0 +1,21 @@
+/* Reset and prevent small scrollbars caused by body/page gaps */
+html, body, #root { height: 100%; margin: 0; padding: 0; }
+body { overflow: hidden; }
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Ensure sections strictly fit the container to avoid tiny overflows during transforms */
+.section { position: absolute; inset: 0; will-change: transform, opacity; width: 100%; height: 100%; }
+
+@keyframes slideInFromBottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes slideInFromTop { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@keyframes slideOutToTop { from { transform: translateY(0); } to { transform: translateY(-100%); } }
+@keyframes slideOutToBottom { from { transform: translateY(0); } to { transform: translateY(100%); } }
+
+.section.enter.from-bottom { animation: slideInFromBottom 700ms ease forwards; }
+.section.enter.from-top { animation: slideInFromTop 700ms ease forwards; }
+
+.section.leave.to-top { animation: slideOutToTop 700ms ease forwards; }
+.section.leave.to-bottom { animation: slideOutToBottom 700ms ease forwards; }
+
+/* Make iframes and images responsive and prevent them from causing overflow */
+iframe, img, video { max-width: 100%; display: block; }

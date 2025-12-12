@@ -9,6 +9,7 @@ import Location from './sections/Location';
 import LanguageToggle from './components/LanguageToggle';
 import Navbar from './components/Navbar';
 import HamburgerMenu from './components/HamburgerMenu';
+import Footer from './components/Footer';
 import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
 import { sectionOrder, setHash, getInitialLocale } from './util/navigation';
 
@@ -272,16 +273,7 @@ export default function App(): JSX.Element {
       )}
 
       {/* Footer visible only on Localizacao */}
-      {currentSection === 'location' && (
-        <div className="fixed bottom-0 left-0 w-full z-50">
-          <div className="bg-green-900 text-white px-6 py-3 text-center">
-            <p className="text-sm font-semibold">{translate(locale,'footer.contact')}</p>
-            <p className="text-xs">{translate(locale,'footer.whatsapp')}: (71) 99220-6321</p>
-            <p className="text-xs">{translate(locale,'footer.email')}: contato@pousadagaia.com</p>
-            <p className="text-xs opacity-80">{translate(locale,'footer.copy')}</p>
-          </div>
-        </div>
-      )}
+      {currentSection === 'location' && <Footer locale={locale} />}
       </div>
     </LocaleContext.Provider>
   );

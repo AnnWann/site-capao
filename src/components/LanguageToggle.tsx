@@ -14,9 +14,9 @@ export default function LanguageToggle({
   const defaultLocale = ((): Locale => {
     try {
       const stored = window.localStorage.getItem('locale');
-      if (stored === 'pt-BR' || stored === 'en-US') return stored;
+      if (stored === 'pt-BR' || stored === 'en-US' || stored === 'es-ES') return stored;
       const nav = navigator.language || 'en-US';
-      return nav.toLowerCase().startsWith('pt') ? 'pt-BR' : 'en-US';
+      return nav.toLowerCase().startsWith('pt') ? 'pt-BR' :  nav.toLowerCase().startsWith('es') ? 'es-ES' : 'en-US';
     } catch {
       return 'en-US';
     }
@@ -49,6 +49,7 @@ export default function LanguageToggle({
   const options: { key: Locale; label: string; flag: string }[] = [
     { key: 'pt-BR', label: 'Português (BR)', flag: '🇧🇷' },
     { key: 'en-US', label: 'English (US)', flag: '🇺🇸' },
+    { key: 'es-ES', label: 'Español (ES)', flag: '🇪🇸' },
   ];
 
   const btnClass = compact

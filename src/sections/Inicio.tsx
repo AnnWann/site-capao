@@ -31,7 +31,7 @@ export default function Inicio(): JSX.Element {
         <p className="mt-3 text-sm md:text-2xl drop-shadow-lg max-w-full">{t('inicio.subtitle')}</p>
         <p className="text-xs md:text-xl mt-2 drop-shadow-lg italic max-w-full">{t('inicio.tagline')}</p>
 
-      <div className="mt-10 w-full max-w-3xl px-6 mx-auto">
+      <div className="mt-10 w-full max-w-5xl px-6 mx-auto">
         {/* Desktop / larger screens: show grid inline */}
         <div className="hidden md:flex md:justify-center">
           <InfoGrid items={items} />

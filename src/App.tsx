@@ -7,6 +7,7 @@ import Gallery from './sections/Gallery';
 import Booking from './sections/Booking';
 import Location from './sections/Location';
 import LanguageToggle from './components/LanguageToggle';
+import NavLinks from './components/NavLinks';
 import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
 
 export default function App(): JSX.Element {
@@ -244,13 +245,7 @@ export default function App(): JSX.Element {
 
         {/* Desktop links */}
         <div className="hidden md:flex gap-8 items-center">
-          <a href="#home" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('home'); }} className="font-semibold">{translate(locale,'nav.home')}</a>
-          <a href="#rooms" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('rooms'); }} className="font-semibold">{translate(locale,'nav.rooms')}</a>
-          <a href="#amenities" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('amenities'); }} className="font-semibold">{translate(locale,'nav.amenities')}</a>
-          <a href="#attractions" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('attractions'); }} className="font-semibold">{translate(locale,'nav.attractions') ?? 'Atrações'}</a>
-          <a href="#gallery" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('gallery'); }} className="font-semibold">{translate(locale,'nav.gallery')}</a>
-          <a href="#booking" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('booking'); }} className="font-semibold">{translate(locale,'nav.booking')}</a>
-          <a href="#location" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('location'); }} className="font-semibold">{translate(locale,'nav.location')}</a>
+          <NavLinks locale={locale} onNavigate={(id) => { setMobileMenuOpen(false); scrollToSection(id); }} />
           {/* Language toggle shown inside navbar on non-home (desktop) */}
           {currentSection !== 'home' && (
             <div className="ml-4">
@@ -280,7 +275,7 @@ export default function App(): JSX.Element {
       {/* Mobile overlay menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 md:hidden bg-black/50" onClick={() => setMobileMenuOpen(false)}>
-          <div className="absolute right-4 top-16 bg-white/95 text-neutral-900 rounded-lg shadow-lg p-4 flex flex-col gap-3 z-50" onClick={(e) => e.stopPropagation()}>
+            <div className="absolute right-4 top-16 bg-white/95 text-neutral-900 rounded-lg shadow-lg p-4 flex flex-col gap-3 z-50" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between gap-3 px-2">
               <div className="text-sm font-semibold">{translate(locale,'label.language')}</div>
               <div>
@@ -288,13 +283,7 @@ export default function App(): JSX.Element {
               </div>
             </div>
             <div className="h-px bg-neutral-200 my-2" />
-            <a href="#home" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('home'); }} className="font-semibold">{translate(locale,'nav.home')}</a>
-            <a href="#rooms" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('rooms'); }} className="font-semibold">{translate(locale,'nav.rooms')}</a>
-            <a href="#amenities" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('amenities'); }} className="font-semibold">{translate(locale,'nav.amenities')}</a>
-            <a href="#attractions" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('attractions'); }} className="font-semibold">{translate(locale,'nav.attractions') ?? 'Atrações'}</a>
-            <a href="#gallery" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('gallery'); }} className="font-semibold">{translate(locale,'nav.gallery')}</a>
-            <a href="#reservations" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservations'); }} className="font-semibold">{translate(locale,'nav.reservations')}</a>
-            <a href="#location" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('location'); }} className="font-semibold">{translate(locale,'nav.location')}</a>
+            <NavLinks locale={locale} onNavigate={(id) => { setMobileMenuOpen(false); scrollToSection(id); }} closeMenu={() => setMobileMenuOpen(false)} />
           </div>
         </div>
       )}

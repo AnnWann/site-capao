@@ -1,22 +1,22 @@
 import { type JSX, useState } from 'react';
 import { useLocale } from '../contexts/LocaleContext';
 import InfoGrid, { type InfoItemType } from '../components/InfoGrid';
-import { buildInicioInfos } from '../util/infos';
+import { buildInicioInfos as buildHomeInfos } from '../util/infos';
 import Modal from '../components/Modal';
 
-export default function Inicio(): JSX.Element {
+export default function Home(): JSX.Element {
   const { t } = useLocale();
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const items: InfoItemType[] = buildInicioInfos(t);
+  const items: InfoItemType[] = buildHomeInfos(t);
 
   return (
-    <header id="inicio" className="h-screen w-full bg-cover bg-center flex flex-col justify-center items-center text-white relative" style={{ backgroundImage: "url('/fotos/CasaCompleta3.avif')" }}>
+    <header id="home" className="h-screen w-full bg-cover bg-center flex flex-col justify-center items-center text-white relative" style={{ backgroundImage: "url('/fotos/CasaCompleta3.avif')" }}>
       <div className="relative z-10 flex flex-col items-center text-center px-4">
         {/* Split the title so mobile shows two centered lines: "Pousada" / "Espaço Gaia" */}
         {(() => {
-          const full = t('inicio.title');
+          const full = t('home.title');
           const parts = full.split(' ');
           const first = parts.slice(0, 1).join(' ');
           const rest = parts.slice(1).join(' ');
@@ -28,8 +28,8 @@ export default function Inicio(): JSX.Element {
           );
         })()}
 
-        <p className="mt-3 text-sm md:text-2xl drop-shadow-lg max-w-full">{t('inicio.subtitle')}</p>
-        <p className="text-xs md:text-xl mt-2 drop-shadow-lg italic max-w-full">{t('inicio.tagline')}</p>
+        <p className="mt-3 text-sm md:text-2xl drop-shadow-lg max-w-full">{t('home.subtitle')}</p>
+        <p className="text-xs md:text-xl mt-2 drop-shadow-lg italic max-w-full">{t('home.tagline')}</p>
 
       <div className="mt-10 w-full max-w-5xl px-6 mx-auto">
         {/* Desktop / larger screens: show grid inline */}
@@ -44,11 +44,11 @@ export default function Inicio(): JSX.Element {
             onClick={() => setModalOpen(true)}
             className="w-full bg-white/90 text-emerald-800 rounded-lg py-3 shadow-md flex items-center justify-center font-medium"
           >
-            {t('inicio.more_infos')}
+            {t('home.more_infos')}
           </button>
 
           {modalOpen && (
-            <Modal title={t('inicio.more_infos')} onClose={() => setModalOpen(false)}>
+            <Modal title={t('home.more_infos')} onClose={() => setModalOpen(false)}>
               <div className="p-2">
                 <InfoGrid items={items} labelClass="text-gray-800" />
               </div>
@@ -62,7 +62,7 @@ export default function Inicio(): JSX.Element {
             href="#reservas"
             className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors"
           >
-            {t('inicio.book') ?? 'Reservar'}
+            {t('home.book') ?? 'Reservar'}
           </a>
         </div>
       </div>

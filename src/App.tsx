@@ -1,11 +1,11 @@
 import { type JSX, useEffect, useRef, useState } from 'react';
-import Inicio from './sections/Inicio';
-import Acomodacoes from './sections/Acomodacoes';
-import Atrativos from './sections/Atrativos';
-import Atracoes from './sections/Atracoes';
-import Galeria from './sections/Galeria';
-import Reservas from './sections/Reservas';
-import Localizacao from './sections/Localizacao';
+import Inicio from './sections/Home';
+import Acomodacoes from './sections/Rooms';
+import Atrativos from './sections/Amenities';
+import Atracoes from './sections/Attractions';
+import Galeria from './sections/Gallery';
+import Reservas from './sections/Booking';
+import Localizacao from './sections/Localization';
 import LanguageToggle from './components/LanguageToggle';
 import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
 

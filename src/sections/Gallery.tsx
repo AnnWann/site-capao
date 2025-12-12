@@ -4,9 +4,11 @@ import Carousel from '../components/Carousel';
 import Card from '../components/Card';
 import photos from '../util/fotos';
 
-function getLanguageFromItem(p: { pt_br: string; en_us: string }, locale: string): string {
+function getLanguageFromItem(p: { pt_br: string; en_us: string; es_es: string }, locale: string): string {
   if (locale === 'pt-BR') {
     return p.pt_br;
+  } else if (locale === 'es-ES') {
+    return p.es_es;
   } else {
     return p.en_us;
   }

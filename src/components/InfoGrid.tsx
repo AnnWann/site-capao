@@ -23,7 +23,7 @@ export default function InfoGrid({ items, labelClass }: { items: InfoItemType[];
     <div className="w-full">
       <div className="flex flex-col md:flex-row md:flex-wrap items-start gap-6 overflow-x-auto md:overflow-x-visible px-2 py-2 justify-center">
         {items.map((it) => (
-          <div key={it.key} className="w-full md:w-auto md:flex-shrink-0 md:min-w-[140px]">
+          <div key={it.key} className="w-full md:w-auto md:flex-shrink md:min-w-[110px]">
             <InfoItem label={it.label} svg={it.svg} labelClass={labelClass} />
           </div>
         ))}

@@ -15,84 +15,61 @@ Quick Start
 
 ```bash
 npm install
+# Pousada Espaço Gaia — Site
+
+This repository contains a Vite + React + TypeScript single-page site for Pousada Espaço Gaia (Vale do Capão).
+
+Overview
+- Framework: Vite + React + TypeScript
+- Styling: Tailwind utility classes
+- Dev: `npm run dev` (Vite)
+- Build output: `dist`
+
+Quick start
+1. Install dependencies
+
+```bash
+npm install
 ```
 
 2. Run development server
 
-# Pousada Espaço Gaia — Site
-
-Este repositório contém o site estático da Pousada Espaço Gaia (Vale do Capão), construído com Vite + React + TypeScript.
-
-Resumo do projeto
-- Propósito: site one-page com seções (Início, Acomodações, Galeria, Reservas, Localização)
-- Tech: Vite, React, TypeScript, Tailwind-style utilities
-- Imagens: armazenadas em `public/fotos/`
-
-Principais características
-- Sistema de navegação por hash com montagem de uma seção por vez para evitar problemas de scroll-snap
-- `Carousel` genérico com suporte a arraste por pointer, autoplay, setas e pontos de paginação
-- `Card` que adapta `object-fit` para imagens retrato/paisagem e fornece fallback SVG para imagens ausentes
- - `Lightbox` modal: clique rápido em imagens abre uma sobreposição maior que escurece o resto da página
-
-Recent changes / developer notes
-- Added a new section **Atrações Turísticas** implemented in `src/sections/Atracoes.tsx`. It displays a carousel of nearby waterfalls (image + name + distance/walking time). Images for these attractions are stored under `public/fotos/cachoeiras/` (you can swap these for local or remote URLs).
-- The infos area on the hero was refactored into a reusable `InfoGrid` component (`src/components/InfoGrid.tsx`) and the page-specific data moved to `src/util/infos.ts`.
-- Icons were centralized in `src/icons/` and the project now uses `lucide-react` for consistent icon rendering.
-- The `Carousel` component gained a few props used across the site: `renderDot`, `hideDotsOnMobile`, and `slideWidthFactor` (useful to avoid edge-peeking on responsive slides).
-
-Comportamento de interação (tap vs drag)
-- Para melhorar a usabilidade dentro de carrosséis: o carrossel exige uma breve pressão (≈180ms) antes de iniciar o arraste. Assim, um toque rápido em uma imagem abre o `Lightbox`, enquanto pressionar e arrastar manipula o carrossel.
-
-Rápido (developer) — comandos úteis
 ```bash
-npm install        # instalar dependências
-npm run dev        # rodar servidor de desenvolvimento (Vite)
-npm run build      # gerar build para produção em `dist`
-npx serve dist     # visualizar `dist` localmente (opcional)
+npm run dev
 ```
 
-Executar localmente
-1. Instale dependências: `npm install`
-2. Inicie o servidor: `npm run dev`
-3. Abra `http://localhost:5173` (ou a porta informada pelo Vite)
+Open the URL shown by Vite (typically http://localhost:5173).
+
+Structure (important files)
+
+```
+public/                # static assets (photos, etc.)
+src/
+  components/          # reusable components (Carousel, Card, Nav, Footer, ArrowNav...)
+  sections/            # page sections (Inicio, Acomodacoes, Atracoes, Galeria, Reservas, Localizacao)
+  util/                # helpers (navigation.tsx, infos.ts, fotos.ts)
+  styles/               # global styles (global.css)
+  App.tsx               # app shell and routing by hash
+  main.tsx              # React entry
+docs/                  # deployment and structure notes
+```
+
+Developer notes
+- Navigation: the app navigates between `SectionId` identifiers. See `src/util/navigation.tsx` for helpers.
+- Carousel: `src/components/Carousel.tsx` supports pointer drag, autoplay, arrows and dots.
+- Images: place photos under `public/fotos/` and update `src/util/fotos.ts` when adding/removing.
+
+Suggested next steps (optional)
+- Add tests for `src/util/navigation.tsx` and key components (React Testing Library).
+- Add CI (GitHub Actions) that runs `npm ci && npm run build` on push.
+- Optimize images (AVIF/WebP, srcset, lazy-loading) for production.
 
 Deploy
-- O projeto gera uma pasta `dist` que pode ser publicada em Vercel, Netlify, GitHub Pages ou qualquer host estático.
-- Instruções detalhadas de deploy (Vercel + registro.br) estão em `docs/deploy-vercel.md`.
+- Build with `npm run build` and publish `dist` to Vercel, Netlify or any static host.
+- See `docs/deploy-vercel.md` for Vercel-specific notes.
 
-Estrutura importante
-```
-public/                # assets estáticos (banner.jpg, fotos/ ...)
-src/
-  components/          # Carousel, Card, etc.
-  sections/            # Inicio, Galeria, Acomodacoes, Reservas, Localizacao
-  util/                # `fotos.ts` lista as imagens em `public/fotos/`
-  App.tsx              # wrapper da página e navegação por hash
-  main.tsx             # ponto de entrada React
-docs/                  # documentação (deploy, estrutura, componentes)
-```
+Contact / Credits
+- Built for Pousada Espaço Gaia. For content edits, update `src/sections/` and `public/fotos/`.
 
-Notas de manutenção
-- Ao adicionar/remover imagens, atualize `src/util/fotos.ts` com os nomes corretos.
-- Se quiser ajustar o comportamento do carrossel (tamanho do slide, autoplay), veja `src/components/Carousel.tsx`.
-
-How to preview changes locally
-- Install dependencies: `npm install`
-- Run the dev server: `npm run dev`
-- Open the site at the URL shown by Vite (typically `http://localhost:5173`)
-
-If you add images for attractions, place them under `public/fotos/cachoeiras/` and reference their filenames in `src/sections/Atracoes.tsx` (or update `src/util/fotos.ts` to centralize them).
-
-Contribuição e deploy automático
-- Recomendo manter o repositório em GitHub e conectar ao Vercel para deploy automático em pushes.
-- Se preferir fallback automático (por exemplo durante incidentes do Vercel), posso adicionar um workflow do GitHub Actions que publica para Netlify ou GitHub Pages.
-
-Contato e créditos
-- Desenvolvido para Pousada Espaço Gaia
-- Para ajustes de conteúdo (textos, imagens) edite os arquivos em `src/sections/` e `public/fotos/`.
-
-Licença
-- Código fornecido sem licença específica (adicione uma LICENSE se desejar).
-
----
-Se quiser, eu adapto esse README para incluir instruções de deploy automáticas (GitHub Actions) ou um `vercel.json` com redirects canonical.
+License
+- The Unlicense

@@ -3,10 +3,11 @@ import { type JSX } from 'react';
 import LanguageToggle from './LanguageToggle';
 import NavLinks from './NavLinks';
 import { type Locale, translate } from '../contexts/LocaleContext';
+import type { SectionId } from '../util/navigation';
 
 type Props = {
   locale: Locale;
-  onNavigate: (id: string) => void;
+  onNavigate: (id: SectionId) => void;
 };
 
 export default function HamburgerMenu({ locale, onNavigate }: Props): JSX.Element {

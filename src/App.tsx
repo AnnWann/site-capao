@@ -10,23 +10,18 @@ import LanguageToggle from './components/LanguageToggle';
 import Navbar from './components/Navbar';
 import HamburgerMenu from './components/HamburgerMenu';
 import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
+import { sectionOrder, setHash, getInitialLocale } from './util/navigation';
+
+import type { SectionId } from './util/navigation';
 
 export default function App(): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [currentSection, setCurrentSection] = useState<string>('home');
+  const [currentSection, setCurrentSection] = useState<SectionId>('home');
   const isScrollingRef = useRef(false);
 
-  const sectionOrder = ['home', 'rooms', 'amenities', 'attractions', 'gallery', 'booking', 'location'];
+  // sectionOrder and small helpers live in src/util/navigation.ts
 
-  const setHash = (id: string) => {
-    try {
-      window.location.hash = `#${id}`;
-    } catch {
-      // ignore
-    }
-  };
-
-  const scrollToSection = (id: string) => {
+  const scrollToSection = (id: SectionId) => {
     if (id === currentSection) return;
     const idxBefore = sectionOrder.indexOf(currentSection);
     const idxAfter = sectionOrder.indexOf(id);
@@ -45,13 +40,13 @@ export default function App(): JSX.Element {
 
   useEffect(() => {
     // initialize from hash
-    const h = (window.location.hash || '').replace('#', '');
-    if (h && sectionOrder.includes(h)) setCurrentSection(h);
+      const h = (window.location.hash || '').replace('#', '');
+      if (h && (sectionOrder as readonly string[]).includes(h)) setCurrentSection(h as SectionId);
 
     const onHash = () => {
-      const newHash = (window.location.hash || '').replace('#', '');
-      if (newHash && sectionOrder.includes(newHash)) setCurrentSection(newHash);
-    };
+        const newHash = (window.location.hash || '').replace('#', '');
+        if (newHash && (sectionOrder as readonly string[]).includes(newHash)) setCurrentSection(newHash as SectionId);
+      };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
@@ -160,13 +155,13 @@ export default function App(): JSX.Element {
 
   // transition state
   const TRANSITION_MS = 700;
-  const [prevSection, setPrevSection] = useState<string | null>(null);
+  const [prevSection, setPrevSection] = useState<SectionId | null>(null);
   const transitionTimerRef = useRef<number | null>(null);
   // +1 = moving down (new page comes from bottom), -1 = moving up (new page comes from top)
   const [lastDirection, setLastDirection] = useState<number>(1);
 
   // render a section by id
-  const renderSection = (id: string) => {
+  const renderSection = (id: SectionId) => {
     switch (id) {
       case 'home':
         return <Home />;
@@ -190,16 +185,7 @@ export default function App(): JSX.Element {
   const idx = sectionOrder.indexOf(currentSection);
   const prev = idx > 0 ? sectionOrder[idx - 1] : '';
   const next = idx < sectionOrder.length - 1 ? sectionOrder[idx + 1] : '';
-  const [locale, setLocale] = useState<Locale>(() => {
-    try {
-      const stored = window.localStorage.getItem('locale');
-      if (stored === 'pt-BR' || stored === 'en-US' || stored === 'es-ES') return stored as Locale;
-      const nav = navigator.language || 'en-US';
-      return nav.toLowerCase().startsWith('pt') ? 'pt-BR' :  nav.toLowerCase().startsWith('es') ? 'es-ES' : 'en-US';
-    } catch {
-      return 'en-US';
-    }
-  });
+  const [locale, setLocale] = useState<Locale>(() => getInitialLocale() as Locale);
 
   // cleanup transition timer on unmount
   useEffect(() => {

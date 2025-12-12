@@ -1,12 +1,13 @@
 import { type JSX } from 'react';
 import LanguageToggle from './LanguageToggle';
 import NavLinks from './NavLinks';
-import { type Locale, translate } from '../contexts/LocaleContext';
+import { type Locale } from '../contexts/LocaleContext';
+import type { SectionId } from '../util/navigation';
 
 type Props = {
   locale: Locale;
-  currentSection: string;
-  onNavigate: (id: string) => void;
+  currentSection: SectionId;
+  onNavigate: (id: SectionId) => void;
   onLocaleChange: (l: Locale) => void;
 };
 

@@ -1,17 +1,13 @@
 import { type JSX, useEffect, useRef, useState } from 'react';
-import Home from './sections/Home';
-import Rooms from './sections/Rooms';
-import Amenities from './sections/Amenities';
-import Attractions from './sections/Attractions';
-import Gallery from './sections/Gallery';
-import Booking from './sections/Booking';
-import Location from './sections/Location';
+// section components are now resolved via util/getSectionComponent
 import LanguageToggle from './components/LanguageToggle';
 import Navbar from './components/Navbar';
 import HamburgerMenu from './components/HamburgerMenu';
 import Footer from './components/Footer';
+import ArrowNav from './components/ArrowNav';
 import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
-import { sectionOrder, setHash, getInitialLocale } from './util/navigation';
+import { sectionOrder, setHash, getInitialLocale, computeDirection, findNextIndex, getSectionComponent } from './util/navigation';
+import './styles/global.css';
 
 import type { SectionId } from './util/navigation';
 
@@ -24,9 +20,7 @@ export default function App(): JSX.Element {
 
   const scrollToSection = (id: SectionId) => {
     if (id === currentSection) return;
-    const idxBefore = sectionOrder.indexOf(currentSection);
-    const idxAfter = sectionOrder.indexOf(id);
-    const dir = idxAfter > idxBefore ? 1 : -1;
+    const dir = computeDirection(currentSection, id);
     setLastDirection(dir);
     setPrevSection(currentSection);
     setCurrentSection(id);
@@ -56,16 +50,15 @@ export default function App(): JSX.Element {
   useEffect(() => {
     let wheelTimer: number | null = null;
 
-    const onWheel = (e: WheelEvent) => {
+      const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (isScrollingRef.current) return;
       isScrollingRef.current = true;
       const dir = e.deltaY > 0 ? 1 : -1;
-      const idx = sectionOrder.indexOf(currentSection);
-      const nextIdx = Math.max(0, Math.min(sectionOrder.length - 1, idx + dir));
-      if (nextIdx !== idx) {
+      const nextIdx = findNextIndex(currentSection, dir);
+      if (nextIdx !== sectionOrder.indexOf(currentSection)) {
         const id = sectionOrder[nextIdx];
-        scrollToSection(id);
+        scrollToSection(id as SectionId);
       }
       if (wheelTimer) window.clearTimeout(wheelTimer);
       wheelTimer = window.setTimeout(() => {
@@ -123,9 +116,8 @@ export default function App(): JSX.Element {
       if (!isScrollingRef.current && touchMovedRef.current && Math.abs(dy) > THRESHOLD_PX) {
         isScrollingRef.current = true;
         const dir = dy < 0 ? 1 : -1; // dy<0 means user swiped up -> next section
-        const idx = sectionOrder.indexOf(currentSection);
-        const nextIdx = Math.max(0, Math.min(sectionOrder.length - 1, idx + dir));
-        if (nextIdx !== idx) scrollToSection(sectionOrder[nextIdx]);
+        const nextIdx = findNextIndex(currentSection, dir);
+        if (nextIdx !== sectionOrder.indexOf(currentSection)) scrollToSection(sectionOrder[nextIdx] as SectionId);
 
         // small debounce to avoid multiple triggers
         window.setTimeout(() => {
@@ -161,31 +153,12 @@ export default function App(): JSX.Element {
   // +1 = moving down (new page comes from bottom), -1 = moving up (new page comes from top)
   const [lastDirection, setLastDirection] = useState<number>(1);
 
-  // render a section by id
-  const renderSection = (id: SectionId) => {
-    switch (id) {
-      case 'home':
-        return <Home />;
-      case 'rooms':
-        return <Rooms />;
-      case 'amenities':
-        return <Amenities />;
-      case 'attractions':
-        return <Attractions />;
-      case 'gallery':
-        return <Gallery />;
-      case 'booking':
-        return <Booking />;
-      case 'location':
-        return <Location />;
-      default:
-        return <Home />;
-    }
-  };
+  // render a section by id (delegated to util)
+  const renderSection = (id: SectionId) => getSectionComponent(id);
 
   const idx = sectionOrder.indexOf(currentSection);
-  const prev = idx > 0 ? sectionOrder[idx - 1] : '';
-  const next = idx < sectionOrder.length - 1 ? sectionOrder[idx + 1] : '';
+  const prev: SectionId | null = idx > 0 ? sectionOrder[idx - 1] : null;
+  const next: SectionId | null = idx < sectionOrder.length - 1 ? sectionOrder[idx + 1] : null;
   const [locale, setLocale] = useState<Locale>(() => getInitialLocale() as Locale);
 
   // cleanup transition timer on unmount
@@ -198,29 +171,6 @@ export default function App(): JSX.Element {
   return (
     <LocaleContext.Provider value={{ locale, setLocale, t: (k: string) => translate(locale, k) }}>
       <div ref={containerRef} className="font-sans bg-neutral-100 text-neutral-900 h-screen w-screen overflow-hidden relative">
-      <style>{`
-        /* Reset and prevent small scrollbars caused by body/page gaps */
-        html, body, #root { height: 100%; margin: 0; padding: 0; }
-        body { overflow: hidden; }
-        *, *::before, *::after { box-sizing: border-box; }
-
-        /* Ensure sections strictly fit the container to avoid tiny overflows during transforms */
-        .section { position: absolute; inset: 0; will-change: transform, opacity; width: 100%; height: 100%; }
-
-        @keyframes slideInFromBottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes slideInFromTop { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-        @keyframes slideOutToTop { from { transform: translateY(0); } to { transform: translateY(-100%); } }
-        @keyframes slideOutToBottom { from { transform: translateY(0); } to { transform: translateY(100%); } }
-
-        .section.enter.from-bottom { animation: slideInFromBottom ${TRANSITION_MS}ms ease forwards; }
-        .section.enter.from-top { animation: slideInFromTop ${TRANSITION_MS}ms ease forwards; }
-
-        .section.leave.to-top { animation: slideOutToTop ${TRANSITION_MS}ms ease forwards; }
-        .section.leave.to-bottom { animation: slideOutToBottom ${TRANSITION_MS}ms ease forwards; }
-
-        /* Make iframes and images responsive and prevent them from causing overflow */
-        iframe, img, video { max-width: 100%; display: block; }
-      `}</style>
 
       {/* NAVBAR */}
       <Navbar locale={locale} currentSection={currentSection} onNavigate={scrollToSection} onLocaleChange={setLocale} />
@@ -255,22 +205,7 @@ export default function App(): JSX.Element {
       </main>
 
       {/* Arrows */}
-      {prev && (
-        <button onClick={() => prev && scrollToSection(prev)} aria-label="Subir" className="fixed top-24 md:top-16 left-1/2 -translate-x-1/2 z-40">
-            <div className="mb-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900">{translate(locale, `nav.${prev}`)}</div>
-          <div className={`text-4xl font-bold ${currentSection === 'home' ? 'text-white' : 'text-neutral-900'}`}>↑</div>
-        </button>
-      )}
-
-      {next && (
-        <button onClick={() => next && scrollToSection(next)} aria-label="Descer" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-          {/* Emphasize arrow on home */}
-          <div className={`flex flex-col items-center ${currentSection === 'home' ? 'scale-110' : ''}`}>
-            <div className={`${currentSection === 'home' ? 'tiny-bounce text-7xl md:text-6xl font-extrabold text-white' : 'text-4xl font-bold text-neutral-900'}`}>↓</div>
-            <div className={`mt-2 ${currentSection === 'home' ? 'text-base md:text-sm font-semibold px-3 py-1 rounded-md shadow bg-white/90 text-neutral-900' : 'mt-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900'}`}>{translate(locale, `nav.${next}`)}</div>
-          </div>
-        </button>
-      )}
+      <ArrowNav prev={prev} next={next} locale={locale} onNavigate={scrollToSection} emphasizeNext={currentSection === 'home'} emphasizePrev={false} />
 
       {/* Footer visible only on Localizacao */}
       {currentSection === 'location' && <Footer locale={locale} />}

@@ -182,7 +182,7 @@ export default function App(): JSX.Element {
         </div>
       )}
 
-      <HamburgerMenu locale={locale} onNavigate={scrollToSection} />
+      <HamburgerMenu locale={locale} onNavigate={scrollToSection} onLocaleChange={setLocale} />
 
       {/* Active page area */}
       <main className="h-full w-full relative">

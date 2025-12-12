@@ -5,12 +5,15 @@ import NavLinks from './NavLinks';
 import { type Locale, translate } from '../contexts/LocaleContext';
 import type { SectionId } from '../util/navigation';
 
+
+
 type Props = {
   locale: Locale;
   onNavigate: (id: SectionId) => void;
+  onLocaleChange: (l: Locale) => void;
 };
 
-export default function HamburgerMenu({ locale, onNavigate }: Props): JSX.Element {
+export default function HamburgerMenu({ locale, onNavigate, onLocaleChange }: Props): JSX.Element {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,7 +30,7 @@ export default function HamburgerMenu({ locale, onNavigate }: Props): JSX.Elemen
             <div className="flex items-center justify-between gap-3 px-2">
               <div className="text-sm font-semibold">{translate(locale,'label.language')}</div>
               <div>
-                <LanguageToggle value={locale} onChange={() => { /* noop: bubble via translate if needed */ }} compact />
+                <LanguageToggle value={locale} onChange={onLocaleChange} compact />
               </div>
             </div>
             <div className="h-px bg-neutral-200 my-2" />

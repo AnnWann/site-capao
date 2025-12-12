@@ -192,9 +192,9 @@ export default function App(): JSX.Element {
   const [locale, setLocale] = useState<Locale>(() => {
     try {
       const stored = window.localStorage.getItem('locale');
-      if (stored === 'pt-BR' || stored === 'en-US') return stored as Locale;
+      if (stored === 'pt-BR' || stored === 'en-US' || stored === 'es-ES') return stored as Locale;
       const nav = navigator.language || 'en-US';
-      return nav.toLowerCase().startsWith('pt') ? 'pt-BR' : 'en-US';
+      return nav.toLowerCase().startsWith('pt') ? 'pt-BR' :  nav.toLowerCase().startsWith('es') ? 'es-ES' : 'en-US';
     } catch {
       return 'en-US';
     }

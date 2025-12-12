@@ -7,14 +7,14 @@ import Gallery from './sections/Gallery';
 import Booking from './sections/Booking';
 import Location from './sections/Location';
 import LanguageToggle from './components/LanguageToggle';
-import NavLinks from './components/NavLinks';
+import Navbar from './components/Navbar';
+import HamburgerMenu from './components/HamburgerMenu';
 import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
 
 export default function App(): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [currentSection, setCurrentSection] = useState<string>('home');
   const isScrollingRef = useRef(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const sectionOrder = ['home', 'rooms', 'amenities', 'attractions', 'gallery', 'booking', 'location'];
 
@@ -236,27 +236,7 @@ export default function App(): JSX.Element {
       `}</style>
 
       {/* NAVBAR */}
-      <nav
-        aria-hidden={currentSection === 'home'}
-        className={`fixed top-0 left-0 w-full py-4 z-50 flex items-center justify-between px-4 ${currentSection !== 'home' ? 'bg-green-800 text-white shadow-md' : 'bg-transparent text-white/0 pointer-events-none select-none'}`}>
-        <div className="flex items-center gap-6"> 
-          <div className="text-lg font-bold">Pousada Espaço Gaia</div>
-        </div>
-
-        {/* Desktop links */}
-        <div className="hidden md:flex gap-8 items-center">
-          <NavLinks locale={locale} onNavigate={(id) => { setMobileMenuOpen(false); scrollToSection(id); }} />
-          {/* Language toggle shown inside navbar on non-home (desktop) */}
-          {currentSection !== 'home' && (
-            <div className="ml-4">
-              <LanguageToggle value={locale} onChange={setLocale} compact />
-            </div>
-          )}
-        </div>
-
-        {/* placeholder to keep nav height stable */}
-        <div className="md:hidden" />
-      </nav>
+      <Navbar locale={locale} currentSection={currentSection} onNavigate={scrollToSection} onLocaleChange={setLocale} />
 
       {/* Floating language toggle on Inicio (small and slim) - visible on all sizes so it's separate from the navbar */}
       {currentSection === 'home' && (
@@ -265,28 +245,7 @@ export default function App(): JSX.Element {
         </div>
       )}
 
-      {/* Mobile burger (moved out of nav so it remains clickable when nav is inert) */}
-      <div className="fixed top-[14px] right-4 z-50 md:hidden">
-        <button aria-label="Menu" aria-controls="mobile-menu" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((s) => !s)} className="p-2 rounded-md bg-white/10">
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
-      </div>
-
-      {/* Mobile overlay menu */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden bg-black/50" onClick={() => setMobileMenuOpen(false)}>
-            <div className="absolute right-4 top-16 bg-white/95 text-neutral-900 rounded-lg shadow-lg p-4 flex flex-col gap-3 z-50" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between gap-3 px-2">
-              <div className="text-sm font-semibold">{translate(locale,'label.language')}</div>
-              <div>
-                <LanguageToggle value={locale} onChange={setLocale} compact />
-              </div>
-            </div>
-            <div className="h-px bg-neutral-200 my-2" />
-            <NavLinks locale={locale} onNavigate={(id) => { setMobileMenuOpen(false); scrollToSection(id); }} closeMenu={() => setMobileMenuOpen(false)} />
-          </div>
-        </div>
-      )}
+      <HamburgerMenu locale={locale} onNavigate={scrollToSection} />
 
       {/* Active page area */}
       <main className="h-full w-full relative">

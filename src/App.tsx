@@ -1,21 +1,21 @@
 import { type JSX, useEffect, useRef, useState } from 'react';
-import Inicio from './sections/Home';
-import Acomodacoes from './sections/Rooms';
-import Atrativos from './sections/Amenities';
-import Atracoes from './sections/Attractions';
-import Galeria from './sections/Gallery';
-import Reservas from './sections/Booking';
-import Localizacao from './sections/Localization';
+import Home from './sections/Home';
+import Rooms from './sections/Rooms';
+import Amenities from './sections/Amenities';
+import Attractions from './sections/Attractions';
+import Gallery from './sections/Gallery';
+import Booking from './sections/Booking';
+import Location from './sections/Location';
 import LanguageToggle from './components/LanguageToggle';
 import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
 
 export default function App(): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [currentSection, setCurrentSection] = useState<string>('inicio');
+  const [currentSection, setCurrentSection] = useState<string>('home');
   const isScrollingRef = useRef(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const sectionOrder = ['inicio', 'acomodacoes', 'atrativos', 'atracoes', 'galeria', 'reservas', 'localizacao'];
+  const sectionOrder = ['home', 'rooms', 'amenities', 'attractions', 'gallery', 'booking', 'location'];
 
   const setHash = (id: string) => {
     try {
@@ -167,22 +167,22 @@ export default function App(): JSX.Element {
   // render a section by id
   const renderSection = (id: string) => {
     switch (id) {
-      case 'inicio':
-        return <Inicio />;
-      case 'acomodacoes':
-        return <Acomodacoes />;
-      case 'atrativos':
-        return <Atrativos />;
-      case 'atracoes':
-        return <Atracoes />;
-      case 'galeria':
-        return <Galeria />;
-      case 'reservas':
-        return <Reservas />;
-      case 'localizacao':
-        return <Localizacao />;
+      case 'home':
+        return <Home />;
+      case 'rooms':
+        return <Rooms />;
+      case 'amenities':
+        return <Amenities />;
+      case 'attractions':
+        return <Attractions />;
+      case 'gallery':
+        return <Gallery />;
+      case 'booking':
+        return <Booking />;
+      case 'location':
+        return <Location />;
       default:
-        return <Inicio />;
+        return <Home />;
     }
   };
 
@@ -236,23 +236,23 @@ export default function App(): JSX.Element {
 
       {/* NAVBAR */}
       <nav
-        aria-hidden={currentSection === 'inicio'}
-        className={`fixed top-0 left-0 w-full py-4 z-50 flex items-center justify-between px-4 ${currentSection !== 'inicio' ? 'bg-green-800 text-white shadow-md' : 'bg-transparent text-white/0 pointer-events-none select-none'}`}>
-        <div className="flex items-center gap-6">
+        aria-hidden={currentSection === 'home'}
+        className={`fixed top-0 left-0 w-full py-4 z-50 flex items-center justify-between px-4 ${currentSection !== 'home' ? 'bg-green-800 text-white shadow-md' : 'bg-transparent text-white/0 pointer-events-none select-none'}`}>
+        <div className="flex items-center gap-6"> 
           <div className="text-lg font-bold">Pousada Espaço Gaia</div>
         </div>
 
         {/* Desktop links */}
         <div className="hidden md:flex gap-8 items-center">
-          <a href="#inicio" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('inicio'); }} className="font-semibold">{translate(locale,'nav.inicio')}</a>
-          <a href="#acomodacoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('acomodacoes'); }} className="font-semibold">{translate(locale,'nav.acomodacoes')}</a>
-          <a href="#atrativos" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atrativos'); }} className="font-semibold">{translate(locale,'nav.atrativos')}</a>
-          <a href="#atracoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atracoes'); }} className="font-semibold">{translate(locale,'nav.atracoes') ?? 'Atrações'}</a>
-          <a href="#galeria" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('galeria'); }} className="font-semibold">{translate(locale,'nav.galeria')}</a>
-          <a href="#reservas" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservas'); }} className="font-semibold">{translate(locale,'nav.reservas')}</a>
-          <a href="#localizacao" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('localizacao'); }} className="font-semibold">{translate(locale,'nav.localizacao')}</a>
-          {/* Language toggle shown inside navbar on non-inicio (desktop) */}
-          {currentSection !== 'inicio' && (
+          <a href="#home" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('home'); }} className="font-semibold">{translate(locale,'nav.home')}</a>
+          <a href="#rooms" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('rooms'); }} className="font-semibold">{translate(locale,'nav.rooms')}</a>
+          <a href="#amenities" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('amenities'); }} className="font-semibold">{translate(locale,'nav.amenities')}</a>
+          <a href="#attractions" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('attractions'); }} className="font-semibold">{translate(locale,'nav.attractions') ?? 'Atrações'}</a>
+          <a href="#gallery" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('gallery'); }} className="font-semibold">{translate(locale,'nav.gallery')}</a>
+          <a href="#booking" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('booking'); }} className="font-semibold">{translate(locale,'nav.booking')}</a>
+          <a href="#location" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('location'); }} className="font-semibold">{translate(locale,'nav.location')}</a>
+          {/* Language toggle shown inside navbar on non-home (desktop) */}
+          {currentSection !== 'home' && (
             <div className="ml-4">
               <LanguageToggle value={locale} onChange={setLocale} compact />
             </div>
@@ -264,7 +264,7 @@ export default function App(): JSX.Element {
       </nav>
 
       {/* Floating language toggle on Inicio (small and slim) - visible on all sizes so it's separate from the navbar */}
-      {currentSection === 'inicio' && (
+      {currentSection === 'home' && (
         <div className="fixed top-4 right-20 z-50">
           <LanguageToggle value={locale} onChange={setLocale} compact />
         </div>
@@ -288,13 +288,13 @@ export default function App(): JSX.Element {
               </div>
             </div>
             <div className="h-px bg-neutral-200 my-2" />
-            <a href="#inicio" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('inicio'); }} className="font-semibold">{translate(locale,'nav.inicio')}</a>
-            <a href="#acomodacoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('acomodacoes'); }} className="font-semibold">{translate(locale,'nav.acomodacoes')}</a>
-            <a href="#atrativos" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atrativos'); }} className="font-semibold">{translate(locale,'nav.atrativos')}</a>
-            <a href="#atracoes" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('atracoes'); }} className="font-semibold">{translate(locale,'nav.atracoes') ?? 'Atrações'}</a>
-            <a href="#galeria" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('galeria'); }} className="font-semibold">{translate(locale,'nav.galeria')}</a>
-            <a href="#reservas" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservas'); }} className="font-semibold">{translate(locale,'nav.reservas')}</a>
-            <a href="#localizacao" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('localizacao'); }} className="font-semibold">{translate(locale,'nav.localizacao')}</a>
+            <a href="#home" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('home'); }} className="font-semibold">{translate(locale,'nav.home')}</a>
+            <a href="#rooms" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('rooms'); }} className="font-semibold">{translate(locale,'nav.rooms')}</a>
+            <a href="#amenities" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('amenities'); }} className="font-semibold">{translate(locale,'nav.amenities')}</a>
+            <a href="#attractions" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('attractions'); }} className="font-semibold">{translate(locale,'nav.attractions') ?? 'Atrações'}</a>
+            <a href="#gallery" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('gallery'); }} className="font-semibold">{translate(locale,'nav.gallery')}</a>
+            <a href="#reservations" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('reservations'); }} className="font-semibold">{translate(locale,'nav.reservations')}</a>
+            <a href="#location" onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); scrollToSection('location'); }} className="font-semibold">{translate(locale,'nav.location')}</a>
           </div>
         </div>
       )}
@@ -323,27 +323,27 @@ export default function App(): JSX.Element {
       {prev && (
         <button onClick={() => prev && scrollToSection(prev)} aria-label="Subir" className="fixed top-24 md:top-16 left-1/2 -translate-x-1/2 z-40">
             <div className="mb-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900">{translate(locale, `nav.${prev}`)}</div>
-          <div className={`text-4xl font-bold ${currentSection === 'inicio' ? 'text-white' : 'text-neutral-900'}`}>↑</div>
+          <div className={`text-4xl font-bold ${currentSection === 'home' ? 'text-white' : 'text-neutral-900'}`}>↑</div>
         </button>
       )}
 
       {next && (
         <button onClick={() => next && scrollToSection(next)} aria-label="Descer" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-          {/* Emphasize arrow on inicio */}
-          <div className={`flex flex-col items-center ${currentSection === 'inicio' ? 'scale-110' : ''}`}>
-            <div className={`${currentSection === 'inicio' ? 'tiny-bounce text-7xl md:text-6xl font-extrabold text-white' : 'text-4xl font-bold text-neutral-900'}`}>↓</div>
-            <div className={`mt-2 ${currentSection === 'inicio' ? 'text-base md:text-sm font-semibold px-3 py-1 rounded-md shadow bg-white/90 text-neutral-900' : 'mt-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900'}`}>{translate(locale, `nav.${next}`)}</div>
+          {/* Emphasize arrow on home */}
+          <div className={`flex flex-col items-center ${currentSection === 'home' ? 'scale-110' : ''}`}>
+            <div className={`${currentSection === 'home' ? 'tiny-bounce text-7xl md:text-6xl font-extrabold text-white' : 'text-4xl font-bold text-neutral-900'}`}>↓</div>
+            <div className={`mt-2 ${currentSection === 'home' ? 'text-base md:text-sm font-semibold px-3 py-1 rounded-md shadow bg-white/90 text-neutral-900' : 'mt-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900'}`}>{translate(locale, `nav.${next}`)}</div>
           </div>
         </button>
       )}
 
       {/* Footer visible only on Localizacao */}
-      {currentSection === 'localizacao' && (
+      {currentSection === 'location' && (
         <div className="fixed bottom-0 left-0 w-full z-50">
           <div className="bg-green-900 text-white px-6 py-3 text-center">
-            <p className="text-sm font-semibold">{translate(locale,'footer.contato')}</p>
+            <p className="text-sm font-semibold">{translate(locale,'footer.contact')}</p>
             <p className="text-xs">{translate(locale,'footer.whatsapp')}: (71) 99220-6321</p>
-            <p className="text-xs">{translate(locale,'footer.email')}: contato@espacogaia.com</p>
+            <p className="text-xs">{translate(locale,'footer.email')}: contato@pousadagaia.com</p>
             <p className="text-xs opacity-80">{translate(locale,'footer.copy')}</p>
           </div>
         </div>

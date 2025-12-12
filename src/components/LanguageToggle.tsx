@@ -1,6 +1,6 @@
 import { type JSX, useEffect, useRef, useState } from 'react';
 
-type Locale = 'pt-BR' | 'en-US';
+type Locale = 'pt-BR' | 'en-US' | 'es-ES';
 
 export default function LanguageToggle({
   value,

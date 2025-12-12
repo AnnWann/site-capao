@@ -1,14 +1,15 @@
 import { type JSX } from 'react';
 import { translate, type Locale } from '../contexts/LocaleContext';
+import type { SectionId } from '../util/navigation';
 
 type Props = {
   locale: Locale;
-  onNavigate: (id: string) => void;
+  onNavigate: (id: SectionId) => void;
   closeMenu?: () => void;
 };
 
 export default function NavLinks({ locale, onNavigate, closeMenu }: Props): JSX.Element {
-  const links: { id: string; key: string }[] = [
+  const links: { id: SectionId; key: string }[] = [
     { id: 'home', key: 'nav.home' },
     { id: 'rooms', key: 'nav.rooms' },
     { id: 'amenities', key: 'nav.amenities' },

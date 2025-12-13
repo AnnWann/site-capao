@@ -19,7 +19,7 @@ export default function Rooms(): JSX.Element {
 
   return (
     <section id="rooms" className="h-screen w-full flex flex-col justify-center relative max-w-5xl mx-auto px-6 bg-neutral-100">
-      <h2 className="text-3xl font-bold mb-6 text-center">{t('nav.rooms')}</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center hidden sm:block">{t('nav.rooms')}</h2>
 
       {/* Mobile carousel */}
       <div className="md:hidden">

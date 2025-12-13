@@ -1,7 +1,7 @@
-import { type JSX } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 import LanguageToggle from './LanguageToggle';
 import NavLinks from './NavLinks';
-import { type Locale } from '../contexts/LocaleContext';
+import { type Locale, useLocale } from '../contexts/LocaleContext';
 import type { SectionId } from '../util/navigation';
 
 type Props = {
@@ -12,6 +12,23 @@ type Props = {
 };
 
 export default function Navbar({ locale, currentSection, onNavigate, onLocaleChange }: Props): JSX.Element {
+  const { t } = useLocale();
+  const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const handler = (ev: MediaQueryListEvent) => setIsMobile(ev.matches);
+    try {
+      mq.addEventListener('change', handler);
+    } catch {
+      // fallback
+      // @ts-ignore
+      mq.addListener(handler);
+    }
+    return () => {
+      try { mq.removeEventListener('change', handler); } catch { try { /* @ts-ignore */ mq.removeListener(handler); } catch {} }
+    };
+  }, []);
   return (
     <nav
       aria-hidden={currentSection === 'home'}
@@ -19,6 +36,13 @@ export default function Navbar({ locale, currentSection, onNavigate, onLocaleCha
       <div className="flex items-center gap-6">
         <div className="text-lg font-bold">Pousada Espaço Gaia</div>
       </div>
+
+      {/* Mobile: show section title centered in navbar when on non-home section */}
+      {isMobile && currentSection !== 'home' && (
+        <div className="absolute md:hidden pointer-events-none" style={{ left: 'calc(50% + 1.5rem)', transform: 'translateX(-50%)' }}>
+          <div className="text-sm font-medium text-white/95">{t(`nav.${currentSection}`)}</div>
+        </div>
+      )}
 
       {/* Desktop links */}
       <div className="hidden md:flex gap-8 items-center">

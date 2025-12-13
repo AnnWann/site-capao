@@ -19,3 +19,43 @@ body { overflow: hidden; }
 
 /* Make iframes and images responsive and prevent them from causing overflow */
 iframe, img, video { max-width: 100%; display: block; }
+
+/* Global custom scrollbar: thin, green thumb, no arrow buttons */
+:root {
+	--scroll-thumb: #117937; /* Tailwind green-600 */
+	--scroll-track: transparent;
+	--scroll-thumb-radius: 999px;
+	--scroll-size: 8px;
+}
+
+/* Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+	height: var(--scroll-size);
+	width: var(--scroll-size);
+}
+
+*::-webkit-scrollbar-track {
+	background: var(--scroll-track);
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: var(--scroll-thumb);
+	border-radius: var(--scroll-thumb-radius);
+	border: 2px solid transparent; /* give some breathing room */
+	background-clip: padding-box;
+}
+
+/* Hide the up/down arrow buttons in WebKit */
+*::-webkit-scrollbar-button {
+	display: none;
+	height: 0; width: 0;
+}
+
+/* Make scrollbars subtle on focused elements */
+*:focus::-webkit-scrollbar-thumb { opacity: 0.95; }

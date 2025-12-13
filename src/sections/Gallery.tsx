@@ -18,7 +18,7 @@ export default function Gallery(): JSX.Element {
   const { t, locale } = useLocale();
   return (
     <section id="gallery" className="min-h-screen w-full flex flex-col justify-center relative px-6 bg-neutral-100">
-      <h2 className="text-3xl font-bold text-center mb-8">{t('nav.gallery')}</h2>
+      <h2 className="text-3xl font-bold text-center mb-8 hidden sm:block">{t('nav.gallery')}</h2>
 
       <div className="max-w-6xl mx-auto w-full px-4">
         <Carousel

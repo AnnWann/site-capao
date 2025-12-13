@@ -48,7 +48,7 @@ export default function Attractions(): JSX.Element {
   return (
     <section id="attractions" className="h-full flex items-center bg-neutral-50 text-gray-800 pb-24 md:pb-0">
       <div className="max-w-5xl mx-auto px-6 w-full pt-8 md:pt-12">
-        <h2 className="text-3xl font-semibold mb-4">{t('nav.attractions') || 'Atrações Turísticas'}</h2>
+        <h2 className="text-3xl font-semibold mb-4 hidden sm:block">{t('nav.attractions') || 'Atrações Turísticas'}</h2>
         <p className="mb-4 text-gray-600 text-sm md:text-base">{t('attractions.info') ?? 'Cachoeiras próximas à pousada'}</p>
 
         <div className="px-2 md:px-0">

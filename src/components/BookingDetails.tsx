@@ -28,7 +28,7 @@ export default function BookingDetails({
 
   return (
     <div className="flex flex-col sm:flex-row sm:justify-center gap-6 items-stretch sm:h-80">
-      <div className="sm:w-1/2 flex justify-center items-center overflow-hidden h-48 sm:h-full">
+      <div className="hidden sm:flex sm:w-1/2 justify-center items-center overflow-hidden h-48 sm:h-full">
         <img
           src={image}
           alt={title ?? 'Listing'}
@@ -97,7 +97,17 @@ export default function BookingDetails({
                 <button onClick={() => setShowModal(false)} className="text-gray-500 ml-2">Close</button>
               </div>
               <div className="mt-3 text-sm space-y-2">
-                <div><strong>{t('listing.label.includes')}</strong> {includes}</div>
+                {image && (
+                  <div className="w-full">
+                    <img
+                      src={image}
+                      alt={title ?? 'Listing'}
+                      className="w-full h-44 object-cover rounded-md shadow-sm"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div className="pt-2"><strong>{t('listing.label.includes')}</strong> {includes}</div>
                 <div><strong>{t('listing.label.ideal')}</strong> {ideal}</div>
                 <div><strong>{t('listing.label.price')}</strong> {price}</div>
                 <div><strong>{t('listing.label.minStay')}</strong> {minStay > 1 ? `${minStay} ${t('listing.label.nights.plural')}` : `${minStay} ${t('listing.label.nights.singular')}`}</div>

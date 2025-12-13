@@ -59,7 +59,7 @@ export default function Home(): JSX.Element {
         {/* Booking button */}
         <div className="mt-6 flex justify-center">
           <a
-            href="#reservas"
+            href="#booking"
             className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors"
           >
             {t('home.book') ?? 'Reservar'}

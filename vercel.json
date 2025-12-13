@@ -2,8 +2,5 @@
   "version": 2,
   "builds": [
     { "src": "api/**", "use": "@vercel/node" }
-  ],
-  "crons": [
-    { "path": "/api/ical/cron", "schedule": "*/10 * * * *" }
   ]
 }

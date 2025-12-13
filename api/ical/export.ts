@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import supabaseAdmin from '../../src/util/supabaseClient';
-import { generateICS } from '../../src/util/ical';
+import supabaseAdmin from '../../src/util/supabaseClient.js';
+import { generateICS } from '../../src/util/ical.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

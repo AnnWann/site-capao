@@ -11,7 +11,7 @@ type Props = {
 export default function ArrowButton({ direction, label, emphasized = false, onClick, ariaLabel }: Props): JSX.Element {
   if (direction === 'up') {
     return (
-      <button onClick={onClick} aria-label={ariaLabel ?? 'Up'} className="fixed top-16 md:top-18 left-1/2 -translate-x-1/2 z-40">
+      <button onClick={onClick} aria-label={ariaLabel ?? 'Up'} className="fixed top-20 md:top-18 left-1/2 -translate-x-1/2 z-40">
         {label && <div className="mb-1 text-xs font-semibold px-2 py-1 rounded-md shadow-sm bg-white/90 text-neutral-900">{label}</div>}
         <div className={`text-4xl font-bold ${emphasized ? 'text-white' : 'text-neutral-900'}`}>↑</div>
       </button>

@@ -1,11 +1,11 @@
 // Simple import worker for OTA iCal feeds.
 // Intended to run as a scheduled job (GitHub Actions cron or serverless scheduled function).
-import supabaseAdmin from '../../src/util/supabaseClient';
+import supabaseAdmin from '../../src/util/supabaseClient.js';
 
 // Use global `fetch` (Node 18+ / Vercel). If not available, the script will fail
 // locally — prefer running with Node 18+ or via a CI runner that provides fetch.
 const fetchFn: typeof fetch = (globalThis as any).fetch;
-import { parseICS } from '../../src/util/ical';
+import { parseICS } from '../../src/util/ical.js';
 import { pathToFileURL } from 'node:url';
 
 const FEEDS = (process.env.ICAL_FEEDS || '').split(',').map(s => s.trim()).filter(Boolean);

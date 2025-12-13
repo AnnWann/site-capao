@@ -6,7 +6,7 @@ export default function Location(): JSX.Element {
   return (
     <section id="location" className="h-screen w-full flex flex-col relative overflow-hidden bg-neutral-100">
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 min-h-0">
-        <h2 className="text-2xl font-bold text-center mb-4">{t('nav.location')}</h2>
+        <h2 className="text-2xl font-bold text-center mb-4 hidden sm:block">{t('nav.location')}</h2>
 
         <div className="w-full max-w-4xl mx-auto bg-white p-4 rounded-2xl shadow-lg">
           <iframe

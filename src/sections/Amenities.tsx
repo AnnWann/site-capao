@@ -73,8 +73,8 @@ export default function Amenities(): JSX.Element {
     },
   ];
   return (
-    <section id="amenities" className="h-full flex items-center bg-white text-gray-800">
-      <div className="max-w-5xl mx-auto px-6 text-center w-full pt-8 md:pt-12">
+    <section id="amenities" className="min-h-screen flex items-center justify-center bg-white text-gray-800">
+      <div className="max-w-5xl mx-auto px-6 text-center w-full pt-20 pb-8">
         <h2 className="text-3xl font-semibold mb-6 hidden sm:block">{t('nav.amenities')}</h2>
 
         {/* subtitle visible only on md+ */}

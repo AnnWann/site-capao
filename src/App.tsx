@@ -2,7 +2,6 @@ import { type JSX, useEffect, useRef, useState } from 'react';
 // section components are now resolved via util/getSectionComponent
 import LanguageToggle from './components/LanguageToggle';
 import Navbar from './components/Navbar';
-import HamburgerMenu from './components/HamburgerMenu';
 import Footer from './components/Footer';
 import ArrowNav from './components/ArrowNav';
 import { LocaleContext, translate, type Locale } from './contexts/LocaleContext';
@@ -182,7 +181,7 @@ export default function App(): JSX.Element {
         </div>
       )}
 
-      <HamburgerMenu locale={locale} onNavigate={scrollToSection} onLocaleChange={setLocale} />
+      {/* Hamburger menu is now part of the Navbar component on mobile */}
 
       {/* Active page area */}
       <main className="h-full w-full relative">

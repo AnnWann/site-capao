@@ -1,5 +1,6 @@
 import { type JSX, useEffect, useState } from 'react';
 import LanguageToggle from './LanguageToggle';
+import HamburgerMenu from './HamburgerMenu';
 import NavLinks from './NavLinks';
 import { type Locale, useLocale } from '../contexts/LocaleContext';
 import type { SectionId } from '../util/navigation';
@@ -13,7 +14,7 @@ type Props = {
 
 export default function Navbar({ locale, currentSection, onNavigate, onLocaleChange }: Props): JSX.Element {
   const { t } = useLocale();
-  const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false);
+  const [, setIsMobile] = useState<boolean>(() => typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)');
@@ -37,25 +38,28 @@ export default function Navbar({ locale, currentSection, onNavigate, onLocaleCha
         <div className="text-lg font-bold">Pousada Espaço Gaia</div>
       </div>
 
-      {/* Mobile: show section title centered in navbar when on non-home section */}
-      {isMobile && currentSection !== 'home' && (
-        <div className="absolute md:hidden pointer-events-none" style={{ left: 'calc(50% + 1.5rem)', transform: 'translateX(-50%)' }}>
-          <div className="text-sm font-medium text-white/95">{t(`nav.${currentSection}`)}</div>
+      {/* Mobile: show section title to the left of the hamburger, within the right-side group */}
+
+      
+
+      {/* Right-side area: desktop links or mobile compact group (title + hamburger) */}
+      <div className="flex items-center gap-4">
+        <div className="hidden md:flex gap-8 items-center">
+          <NavLinks locale={locale} onNavigate={onNavigate} />
+          {currentSection !== 'home' && (
+            <div className="ml-4">
+              <LanguageToggle value={locale} onChange={onLocaleChange} compact />
+            </div>
+          )}
         </div>
-      )}
 
-      {/* Desktop links */}
-      <div className="hidden md:flex gap-8 items-center">
-        <NavLinks locale={locale} onNavigate={onNavigate} />
-        {currentSection !== 'home' && (
-          <div className="ml-4">
-            <LanguageToggle value={locale} onChange={onLocaleChange} compact />
-          </div>
-        )}
+        <div className="flex items-center md:hidden gap-2">
+          {currentSection !== 'home' && (
+            <div className="text-sm font-medium text-white/95 max-w-[60vw] truncate text-right">{t(`nav.${currentSection}`)}</div>
+          )}
+          <HamburgerMenu locale={locale} onNavigate={onNavigate} onLocaleChange={onLocaleChange} />
+        </div>
       </div>
-
-      {/* placeholder to keep nav height stable on mobile */}
-      <div className="md:hidden" />
     </nav>
   );
 }

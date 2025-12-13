@@ -112,7 +112,7 @@ export default function Booking(): JSX.Element {
     <section id="booking" className="w-full flex flex-col items-center justify-center min-h-screen relative px-6 pt-24 pb-10 sm:pt-12 bg-neutral-100">
       <h2 className="hidden sm:block text-3xl font-bold text-center mb-6 w-full max-w-2xl">{t('nav.booking')}</h2>
 
-      <div className="bg-white rounded-2xl shadow-lg p-8 pb-16 text-center max-w-2xl w-full overflow-hidden relative flex flex-col h-full max-h-[calc(100vh-6.5rem)]">
+      <div className="bg-white rounded-2xl shadow-lg p-8 pb-16 text-center max-w-2xl w-full overflow-hidden relative flex flex-col h-full min-h-[360px] sm:min-h-0 max-h-[calc(100vh-6.5rem)]">
 
         <ModeSwitcher
           modes={[

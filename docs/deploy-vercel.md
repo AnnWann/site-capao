@@ -17,6 +17,13 @@ git push origin main
    - Output directory: `dist`
 4. Deploy — Vercel will give you a preview URL (`*.vercel.app`).
 
+## Environment variables (required for Google Sheets)
+If you want `/api/voluntary` and `/api/booking` to work in production, set the Google Sheets variables in:
+
+Vercel Project → Settings → Environment Variables
+
+Full list and notes: see [env-vars.md](./env-vars.md)
+
 ## Option B — Deploy from your machine (Vercel CLI)
 1. Install and login:
 

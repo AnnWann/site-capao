@@ -105,6 +105,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
 
     'walkthrough.teaser': 'Walkthrough interativo',
     'walkthrough.back': 'Voltar',
+    'walkthrough.dragHint': 'Arraste para ver mais',
     
   },
   'en-US': {
@@ -209,6 +210,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
 
     'walkthrough.teaser': 'Interactive walkthrough',
     'walkthrough.back': 'Back',
+    'walkthrough.dragHint': 'Drag to see more',
   },
   'es-ES': {
     'nav.home': 'Home',
@@ -312,6 +314,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
 
     'walkthrough.teaser': 'Recorrido interactivo',
     'walkthrough.back': 'Volver',
+    'walkthrough.dragHint': 'Arrastra para ver más',
   },
 };
 

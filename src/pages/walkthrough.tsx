@@ -4,7 +4,7 @@ import LanguageToggle from '../components/LanguageToggle';
 import { useLocale, type Locale } from '../contexts/LocaleContext';
 import { useRouteTransition } from '../contexts/RouteTransitionContext';
 import WalkthroughRunner from '../walkthrough/WalkthroughRunner';
-import { WALKTHROUGH_ROOT } from '../walkthrough/sceneRegistry';
+import { WALKTHROUGH_ROOT } from '../walkthrough/walkthroughGraph';
 
 type Props = {
   locale: Locale;

@@ -1,17 +1,18 @@
 import { type JSX, useEffect, useMemo, useState } from 'react';
-import type { WalkthroughScene, WalkthroughSceneRef } from './WalkthroughScene';
 import { AlertTriangle, ArrowLeft, RotateCcw } from 'lucide-react';
 import { WalkthroughPillButton, WalkthroughPillLabel } from '../components/WalkthroughPill';
 import WalkthroughViewport from './WalkthroughViewport';
-import { getWalkthroughScene } from './sceneRegistry';
+import WalkthroughSceneView from './WalkthroughSceneView';
+import type { WalkthroughNodeRef } from './WalkthroughNode';
+import { getWalkthroughNode } from './walkthroughGraph';
 
 type Props = {
-  initial: WalkthroughSceneRef;
+  initial: WalkthroughNodeRef;
   dragHintText: string;
 };
 
 export default function WalkthroughRunner({ initial, dragHintText }: Props): JSX.Element {
-  const [stack, setStack] = useState<WalkthroughSceneRef[]>(() => [initial]);
+  const [stack, setStack] = useState<WalkthroughNodeRef[]>(() => [initial]);
   const [transitionToken, setTransitionToken] = useState(0);
   const [transitionKind, setTransitionKind] = useState<'forward' | 'back'>('forward');
 
@@ -23,7 +24,7 @@ export default function WalkthroughRunner({ initial, dragHintText }: Props): JSX
     setTransitionToken((t) => t + 1);
   }, [currentRef]);
 
-  const goTo = (next: WalkthroughSceneRef) => {
+  const goTo = (next: WalkthroughNodeRef) => {
     setTransitionKind('forward');
     setStack((prev) => [...prev, next]);
   };
@@ -41,17 +42,17 @@ export default function WalkthroughRunner({ initial, dragHintText }: Props): JSX
     setStack([initial]);
   };
 
-  const scene = useMemo<WalkthroughScene | null>(() => {
+  const node = useMemo(() => {
     try {
-      return getWalkthroughScene(currentRef);
+      return getWalkthroughNode(currentRef);
     } catch {
       return null;
     }
   }, [currentRef]);
 
-  const imageSrc = scene?.imageSrc ?? '';
+  const imageSrc = node?.imageSrc ?? '';
 
-  if (!scene) {
+  if (!node) {
     return (
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[min(92vw,520px)] pointer-events-none">
         <div className="pointer-events-auto flex items-center justify-center gap-2 flex-wrap">
@@ -83,7 +84,13 @@ export default function WalkthroughRunner({ initial, dragHintText }: Props): JSX
       transitionKind={transitionKind}
       transitionToken={transitionToken}
     >
-      <scene.Scene scene={scene} imageSrc={imageSrc} goTo={goTo} back={back} canGoBack={canGoBack} />
+      <WalkthroughSceneView
+        node={node}
+        params={currentRef.params}
+        canGoBack={canGoBack}
+        back={back}
+        goTo={goTo}
+      />
     </WalkthroughViewport>
   );
 }

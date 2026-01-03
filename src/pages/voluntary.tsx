@@ -2,6 +2,7 @@ import { type JSX, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import VoluntaryCard from '../components/VoluntaryCard';
+import Footer from '../components/Footer';
 import { useLocale, type Locale } from '../contexts/LocaleContext';
 import type { SectionId } from '../util/navigation';
 import { fetchVoluntaryOpportunities, type VoluntaryOpportunity } from '../util/voluntary';
@@ -38,6 +39,9 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
     return (v[locale] ?? v['pt-BR'] ?? v['en-US'] ?? v['es-ES'] ?? '').trim();
   };
 
+  const appMode = String((import.meta as any).env?.VITE_MODE ?? (import.meta as any).env?.MODE ?? '').toUpperCase();
+  const isDev = appMode === 'DEV';
+
   return (
     <div className="min-h-screen w-full bg-neutral-100 text-neutral-900">
       <Navbar
@@ -48,7 +52,7 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
         mobileTitle={t('nav.voluntary')}
       />
 
-      <main className="pt-24 px-6 py-12">
+      <main className="pt-24 px-6 py-12 pb-28">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-bold text-center mb-4">{t('nav.voluntary')}</h1>
 
@@ -57,7 +61,15 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
           <div className="mt-10">
             {error && (
               <div className="bg-white rounded-2xl shadow-lg p-4 text-center text-red-700">
-                {t('voluntary.error')}: {error}
+                {isDev ? (
+                  <>
+                    {t('voluntary.error')}: {error}
+                  </>
+                ) : (
+                  <>
+                    {t('voluntary.contactError')}
+                  </>
+                )}
               </div>
             )}
 
@@ -91,6 +103,8 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
           </div>
         </div>
       </main>
+
+      <Footer locale={locale} />
     </div>
   );
 }

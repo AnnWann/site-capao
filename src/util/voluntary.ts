@@ -30,26 +30,14 @@ const SAMPLE_ITEMS: VoluntaryOpportunity[] = [
   },
 ];
 
+function isDevMode(): boolean {
+  const raw = (import.meta as any).env?.VITE_MODE ?? (import.meta as any).env?.MODE ?? (import.meta as any).env?.mode;
+  if (!raw) return false;
+  return String(raw).toUpperCase() === 'DEV';
+}
+
 export async function fetchVoluntaryOpportunities(signal?: AbortSignal): Promise<VoluntaryOpportunity[]> {
-  const forceSample = (() => {
-    try {
-      if (typeof window === 'undefined') return false;
-      return new URLSearchParams(window.location.search).get('sample') === '1';
-    } catch {
-      return false;
-    }
-  })();
-
-  const isLocalhost = (() => {
-    try {
-      if (typeof window === 'undefined') return false;
-      return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    } catch {
-      return false;
-    }
-  })();
-
-  if (forceSample) return SAMPLE_ITEMS;
+  if (isDevMode()) return SAMPLE_ITEMS;
 
   const tryFetch = async (url: string) => {
     const res = await fetch(url, { method: 'GET', signal });
@@ -60,12 +48,5 @@ export async function fetchVoluntaryOpportunities(signal?: AbortSignal): Promise
     return Array.isArray(data.items) ? data.items : [];
   };
 
-  try {
-    return await tryFetch('/api/voluntary');
-  } catch (err) {
-    // In Vite dev, /api/* is not executed as Vercel serverless.
-    // Fall back to a local sample so the UI can be previewed.
-    if (import.meta.env.DEV || isLocalhost) return SAMPLE_ITEMS;
-    throw err;
-  }
+  return await tryFetch('/api/voluntary');
 }

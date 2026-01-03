@@ -102,6 +102,9 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'platform.booking': 'Booking.com',
     'label.or': 'Ou',
     'label.moreDetails': 'Mais detalhes',
+
+    'walkthrough.teaser': 'Walkthrough interativo',
+    'walkthrough.back': 'Voltar',
     
   },
   'en-US': {
@@ -203,6 +206,9 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'platform.booking': 'Booking.com',
     'label.or': 'Or',
     'label.moreDetails': 'More details',
+
+    'walkthrough.teaser': 'Interactive walkthrough',
+    'walkthrough.back': 'Back',
   },
   'es-ES': {
     'nav.home': 'Home',
@@ -303,6 +309,9 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'platform.booking': 'Booking.com',
     'label.or': 'O',
     'label.moreDetails': 'Más detalles',
+
+    'walkthrough.teaser': 'Recorrido interactivo',
+    'walkthrough.back': 'Volver',
   },
 };
 

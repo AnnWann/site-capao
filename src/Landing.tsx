@@ -1,10 +1,12 @@
 import { type JSX, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LanguageToggle from './components/LanguageToggle';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ArrowNav from './components/ArrowNav';
+import WalkthroughTeaser from './components/WalkthroughTeaser';
 import { useLocale, type Locale } from './contexts/LocaleContext';
+import { useRouteTransition } from './contexts/RouteTransitionContext';
 import { sectionOrder, setHash, computeDirection, findNextIndex, getSectionComponent } from './util/navigation';
 
 import type { SectionId } from './util/navigation';
@@ -19,6 +21,11 @@ export default function Landing({ locale, setLocale }: Props): JSX.Element {
   const [currentSection, setCurrentSection] = useState<SectionId>('home');
   const isScrollingRef = useRef(false);
   const { t } = useLocale();
+  const navigate = useNavigate();
+  const transition = useRouteTransition();
+
+  const WALKTHROUGH_CLOSED_IMG = '/fotos/Portao.avif';
+  const WALKTHROUGH_OPEN_IMG = '/fotos/TrilhaEntrada.avif';
 
   const scrollToSection = (id: SectionId) => {
     if (id === currentSection) return;
@@ -172,6 +179,22 @@ export default function Landing({ locale, setLocale }: Props): JSX.Element {
           </Link>
           <LanguageToggle value={locale} onChange={setLocale} compact />
         </div>
+      )}
+
+      {currentSection === 'home' && (
+        <WalkthroughTeaser
+          label={t('walkthrough.teaser')}
+          imageClosedSrc={WALKTHROUGH_CLOSED_IMG}
+          imageOpenSrc={WALKTHROUGH_OPEN_IMG}
+          onClick={(rect) => {
+            transition.startImageExpand(
+              { top: rect.top, left: rect.left, width: rect.width, height: rect.height },
+              WALKTHROUGH_CLOSED_IMG
+            );
+            // Navigate shortly after start so the overlay expands over the route change.
+            window.setTimeout(() => navigate('/walkthrough'), 120);
+          }}
+        />
       )}
 
       <main className="h-full w-full relative">

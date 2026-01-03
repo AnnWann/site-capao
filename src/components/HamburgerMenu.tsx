@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { type JSX } from 'react';
+import { Link } from 'react-router-dom';
 import LanguageToggle from './LanguageToggle';
 import NavLinks from './NavLinks';
 import { type Locale, translate } from '../contexts/LocaleContext';
@@ -28,6 +29,13 @@ export default function HamburgerMenu({ locale, onNavigate, onLocaleChange, clas
       {open && (
         <div className="fixed inset-0 z-50 md:hidden bg-black/50" onClick={() => setOpen(false)}>
           <div className="absolute right-4 top-16 bg-white/95 text-neutral-900 rounded-lg shadow-lg p-4 flex flex-col gap-3 z-50" onClick={(e) => e.stopPropagation()}>
+            <Link
+              to="/voluntary"
+              onClick={() => setOpen(false)}
+              className="w-full px-4 py-2 rounded-full bg-green-800 text-white font-semibold text-center"
+            >
+              {translate(locale, 'cta.volunteer')}
+            </Link>
             <div className="flex items-center justify-between gap-3 px-2">
               <div className="text-sm font-semibold">{translate(locale,'label.language')}</div>
               <div>

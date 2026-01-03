@@ -1,6 +1,7 @@
 import { type JSX, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import VoluntaryCard from '../components/VoluntaryCard';
 import { useLocale, type Locale } from '../contexts/LocaleContext';
 import type { SectionId } from '../util/navigation';
 import { fetchVoluntaryOpportunities, type VoluntaryOpportunity } from '../util/voluntary';
@@ -75,41 +76,15 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
             {!error && items && items.length > 0 && (
               <div className="grid grid-cols-1 gap-4">
                 {cards.map((it) => (
-                  <div key={it.id} className="bg-white rounded-2xl shadow-lg p-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                      {/* Image */}
-                      <div className="shrink-0">
-                        {it.imageUrl ? (
-                          <img
-                            src={it.imageUrl}
-                            alt={pick(it.title)}
-                            className="w-full sm:w-32 h-28 sm:h-24 object-cover rounded-xl"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="w-full sm:w-32 h-28 sm:h-24 rounded-xl bg-neutral-200" />
-                        )}
-                      </div>
-
-                      {/* Title + description */}
-                      <div className="flex-1 min-w-0">
-                        <div className="text-lg font-bold text-neutral-900">{pick(it.title)}</div>
-                        <div className="text-sm text-neutral-700 mt-1">{pick(it.description)}</div>
-                      </div>
-
-                      {/* Button */}
-                      <div className="shrink-0">
-                        <a
-                          href={it.worldpackersUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex justify-center w-full sm:w-auto px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-colors"
-                        >
-                          {t('voluntary.cta')}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+                  <VoluntaryCard
+                    key={it.id}
+                    imageUrl={it.imageUrl}
+                    imageAlt={pick(it.title)}
+                    title={pick(it.title)}
+                    description={pick(it.description)}
+                    ctaLabel={t('voluntary.cta')}
+                    href={it.worldpackersUrl}
+                  />
                 ))}
               </div>
             )}

@@ -1,13 +1,28 @@
-import { type JSX, type ReactNode, useRef, useState } from 'react';
+import { type JSX, type ReactNode, useEffect, useRef, useState } from 'react';
 
 type Props = {
   imageSrc: string;
   dragHintText: string;
+  transitionKind: 'forward' | 'back';
+  transitionToken: number;
   children: ReactNode;
 };
 
-export default function WalkthroughViewport({ imageSrc, dragHintText, children }: Props): JSX.Element {
+export default function WalkthroughViewport({
+  imageSrc,
+  dragHintText,
+  transitionKind,
+  transitionToken,
+  children,
+}: Props): JSX.Element {
   const [bgPos, setBgPos] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
+  const [prevImage, setPrevImage] = useState<string | null>(null);
+  const [currentImage, setCurrentImage] = useState<string>(imageSrc);
+  const [currentOpacity, setCurrentOpacity] = useState<number>(1);
+  const [currentScale, setCurrentScale] = useState<number>(1);
+  const [transitionEnabled, setTransitionEnabled] = useState<boolean>(false);
+
+  const didMountRef = useRef(false);
   const dragRef = useRef<{
     active: boolean;
     pointerId: number | null;
@@ -19,13 +34,46 @@ export default function WalkthroughViewport({ imageSrc, dragHintText, children }
 
   const clamp01 = (v: number) => Math.max(0, Math.min(100, v));
 
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      setCurrentImage(imageSrc);
+      return;
+    }
+
+    const outgoing = currentImage;
+    setPrevImage(outgoing);
+    setCurrentImage(imageSrc);
+
+    // Prep phase: apply starting state without transitions.
+    setTransitionEnabled(false);
+    setCurrentOpacity(0);
+    setCurrentScale(transitionKind === 'forward' ? 1.08 : 1);
+
+    const raf = requestAnimationFrame(() => {
+      // Animate phase.
+      setTransitionEnabled(true);
+      setCurrentOpacity(1);
+      setCurrentScale(1);
+    });
+
+    const durationMs = 520;
+    const timeout = window.setTimeout(() => {
+      setPrevImage(null);
+    }, durationMs);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(timeout);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transitionToken]);
+
   return (
     <div className="absolute inset-0">
       <div
         className="absolute inset-0 bg-cover"
         style={{
-          backgroundImage: `url('${imageSrc}')`,
-          backgroundPosition: `${bgPos.x}% ${bgPos.y}%`,
           cursor: dragRef.current.active ? 'grabbing' : 'grab',
           touchAction: 'none',
         }}
@@ -62,7 +110,32 @@ export default function WalkthroughViewport({ imageSrc, dragHintText, children }
           dragRef.current.active = false;
           dragRef.current.pointerId = null;
         }}
-      />
+      >
+        {prevImage ? (
+          <div
+            className="absolute inset-0 bg-cover pointer-events-none"
+            style={{
+              backgroundImage: `url('${prevImage}')`,
+              backgroundPosition: `${bgPos.x}% ${bgPos.y}%`,
+            }}
+          />
+        ) : null}
+
+        <div
+          className="absolute inset-0 bg-cover pointer-events-none"
+          style={{
+            backgroundImage: `url('${currentImage}')`,
+            backgroundPosition: `${bgPos.x}% ${bgPos.y}%`,
+            opacity: currentOpacity,
+            transform: `scale(${currentScale})`,
+            transition: !transitionEnabled
+              ? 'none'
+              : transitionKind === 'forward'
+                ? 'opacity 520ms ease, transform 520ms ease'
+                : 'opacity 420ms ease',
+          }}
+        />
+      </div>
 
       <div className="absolute inset-0 bg-black/45 pointer-events-none" />
 

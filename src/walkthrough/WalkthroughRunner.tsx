@@ -1,4 +1,4 @@
-import { type JSX, useMemo, useState } from 'react';
+import { type JSX, useEffect, useMemo, useState } from 'react';
 import type { WalkthroughScene, WalkthroughSceneRef } from './WalkthroughScene';
 import { AlertTriangle, ArrowLeft, RotateCcw } from 'lucide-react';
 import { WalkthroughPillButton, WalkthroughPillLabel } from '../components/WalkthroughPill';
@@ -12,15 +12,24 @@ type Props = {
 
 export default function WalkthroughRunner({ initial, dragHintText }: Props): JSX.Element {
   const [stack, setStack] = useState<WalkthroughSceneRef[]>(() => [initial]);
+  const [transitionToken, setTransitionToken] = useState(0);
+  const [transitionKind, setTransitionKind] = useState<'forward' | 'back'>('forward');
 
   const currentRef = stack[stack.length - 1];
   const canGoBack = stack.length > 1;
 
+  useEffect(() => {
+    // Fire transitions after the new scene is actually current.
+    setTransitionToken((t) => t + 1);
+  }, [currentRef]);
+
   const goTo = (next: WalkthroughSceneRef) => {
+    setTransitionKind('forward');
     setStack((prev) => [...prev, next]);
   };
 
   const back = () => {
+    setTransitionKind('back');
     setStack((prev) => {
       if (prev.length <= 1) return prev;
       return prev.slice(0, -1);
@@ -28,6 +37,7 @@ export default function WalkthroughRunner({ initial, dragHintText }: Props): JSX
   };
 
   const restart = () => {
+    setTransitionKind('forward');
     setStack([initial]);
   };
 
@@ -67,7 +77,12 @@ export default function WalkthroughRunner({ initial, dragHintText }: Props): JSX
   }
 
   return (
-    <WalkthroughViewport imageSrc={imageSrc} dragHintText={dragHintText}>
+    <WalkthroughViewport
+      imageSrc={imageSrc}
+      dragHintText={dragHintText}
+      transitionKind={transitionKind}
+      transitionToken={transitionToken}
+    >
       <scene.Scene scene={scene} imageSrc={imageSrc} goTo={goTo} back={back} canGoBack={canGoBack} />
     </WalkthroughViewport>
   );

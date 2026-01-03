@@ -32,3 +32,65 @@ Optional ranges (defaults are shown):
 
 - `GOOGLE_SHEET_RANGE` (default: `voluntary!A1:Z`)
 - `GOOGLE_BOOKING_RANGE` (default: `booking!A1:Z`)
+
+## Google Sheets schemas
+
+Both `/api/voluntary` and `/api/booking` read **one tab each** from the same spreadsheet (`GOOGLE_SHEET_ID`).
+
+Important rules:
+
+- The **first row must be a header row** with the exact column names below.
+- Columns can be in **any order** (mapping is by header name).
+- Ranges should include the header row (defaults already do).
+- Image cells can be either:
+  - a normal image URL, or
+  - a Google Drive *file id*, or
+  - a Google Drive share URL (`.../file/d/<id>...` or `...?id=<id>`)
+
+### Tab: `voluntary` (default range: `voluntary!A1:Z`)
+
+Used by: `/api/voluntary`
+
+Required columns:
+
+- `id` (string, unique)
+- `worldpackers_url` (string, required)
+
+Optional columns:
+
+- `order` (number; used for sorting; defaults to `0`)
+- `image` (string; URL or Drive id/link)
+- `title_pt_br`, `title_en_us`, `title_es_es` (strings)
+- `desc_pt_br`, `desc_en_us`, `desc_es_es` (strings)
+
+Notes:
+
+- If `order` is missing/invalid, the item sorts as `0`.
+- `title_*` / `desc_*` are not validated by the API, but if they are empty you’ll get empty strings in the UI.
+
+### Tab: `booking` (default range: `booking!A1:Z`)
+
+Used by: `/api/booking`
+
+Required columns:
+
+- `mode` (string; must be one of: `full`, `doubleFront`, `doubleBack`, `ensuite`)
+
+Optional columns:
+
+- `image` (string; URL or Drive id/link)
+- `price` (string)
+- `min_stay` (number)
+- `airbnb_url` (string)
+- `booking_url` (string)
+
+Localized optional columns (any/all can be empty):
+
+- `title_pt_br`, `title_en_us`, `title_es_es`
+- `includes_pt_br`, `includes_en_us`, `includes_es_es`
+- `ideal_pt_br`, `ideal_en_us`, `ideal_es_es`
+
+Notes:
+
+- If `min_stay` is missing/invalid, it’s omitted from the API response.
+- If you have multiple rows with the same `mode`, the last one read wins.

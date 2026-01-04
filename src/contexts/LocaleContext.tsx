@@ -103,7 +103,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'label.or': 'Ou',
     'label.moreDetails': 'Mais detalhes',
 
-    'walkthrough.teaser': 'Walkthrough interativo',
+    'walkthrough.teaser': 'Explore a hospedagem!',
     'walkthrough.back': 'Voltar',
     'walkthrough.dragHint': 'Arraste para ver mais',
     
@@ -208,7 +208,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'label.or': 'Or',
     'label.moreDetails': 'More details',
 
-    'walkthrough.teaser': 'Interactive walkthrough',
+    'walkthrough.teaser': 'Explore the property!',
     'walkthrough.back': 'Back',
     'walkthrough.dragHint': 'Drag to see more',
   },
@@ -312,7 +312,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'label.or': 'O',
     'label.moreDetails': 'Más detalles',
 
-    'walkthrough.teaser': 'Recorrido interactivo',
+    'walkthrough.teaser': '¡Explora el alojamiento!',
     'walkthrough.back': 'Volver',
     'walkthrough.dragHint': 'Arrastra para ver más',
   },

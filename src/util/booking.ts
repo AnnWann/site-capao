@@ -50,7 +50,20 @@ export async function fetchBookingOverrides(signal?: AbortSignal): Promise<Booki
   if (!res.ok) throw new Error(`Failed to load booking overrides (${res.status})`);
   const ct = (res.headers.get('content-type') ?? '').toLowerCase();
   if (!ct.includes('application/json')) throw new Error('Non-JSON response from API');
-  return (await res.json()) as BookingOverridesResponse;
+
+  const raw = (await res.json()) as unknown;
+  const listings = (raw as any)?.listings;
+
+  if (!listings || typeof listings !== 'object' || Array.isArray(listings)) {
+    throw new Error('Invalid booking overrides payload');
+  }
+
+  // Empty payload should behave like a fetch failure (same error path / fallbacks).
+  if (Object.keys(listings).length === 0) {
+    throw new Error('Empty booking overrides');
+  }
+
+  return { listings } as BookingOverridesResponse;
 }
 
 export async function getBookingOverrides(signal?: AbortSignal): Promise<BookingOverridesResult> {

@@ -29,12 +29,7 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
     setError(null);
     fetchVoluntaryOpportunities(ctrl.signal)
       .then((data) => {
-        // Treat "successful but empty" as an error (same UX as a failed API call).
-        if (!Array.isArray(data) || data.length === 0) {
-          throw new Error('No opportunities returned from API');
-        }else{
-        setItems(data);
-        }
+        setItems(Array.isArray(data) ? data : []);
       })
       .catch((e) => setError(e instanceof Error ? e.message : 'Error'));
     return () => ctrl.abort();
@@ -93,7 +88,7 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
 
             {!error && items && items.length === 0 && (
               <div className="bg-white rounded-2xl shadow-lg p-6 text-center text-neutral-700">
-                {t('voluntary.empty')}
+                {t('voluntary.contactError')}
               </div>
             )}
 

@@ -50,8 +50,7 @@ export async function fetchVoluntaryOpportunities(signal?: AbortSignal): Promise
     if (!ct.includes('application/json')) throw new Error('Non-JSON response from API');
     const data = (await res.json()) as { items?: VoluntaryOpportunity[] };
     const items = Array.isArray(data.items) ? data.items : [];
-    // Empty payload should behave like a fetch failure (show the same error UI).
-    if (items.length === 0) throw new Error('No opportunities returned from API');
+    // Empty payload is a valid state (show an empty-state message in the UI).
     return items;
   };
 

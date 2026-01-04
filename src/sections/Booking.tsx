@@ -66,6 +66,9 @@ export default function Booking(): JSX.Element {
   const [mode, setMode] = useState<BookingMode>('full');
   const [overridesResult, setOverridesResult] = useState<BookingOverridesResult | null>(null);
 
+  const appMode = String((import.meta as any).env?.VITE_MODE ?? (import.meta as any).env?.MODE ?? '').toUpperCase();
+  const isDev = appMode === 'DEV';
+
   useEffect(() => {
     const ctrl = new AbortController();
     getBookingOverrides(ctrl.signal)
@@ -153,6 +156,18 @@ export default function Booking(): JSX.Element {
         {overridesResult?.source === 'sample' && (
           <div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-left text-sm text-red-800">
             {t('booking.devWarning')}
+          </div>
+        )}
+
+        {overridesResult?.source === 'empty' && overridesResult?.error && (
+          <div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-left text-sm text-red-800">
+            {isDev ? (
+              <>
+                {t('booking.error')}: {overridesResult.error}
+              </>
+            ) : (
+              <>{t('booking.contactError')}</>
+            )}
           </div>
         )}
 

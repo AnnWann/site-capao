@@ -18,7 +18,27 @@ function requireEnv(name: string): string {
 }
 
 function normalizePrivateKey(key: string): string {
-  return key.replace(/\\n/g, '\n');
+  const trimmed = (key ?? '').trim();
+  const unquoted =
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))
+      ? trimmed.slice(1, -1)
+      : trimmed;
+
+  const normalized = unquoted.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n').trim();
+
+  // Guardrail: key must be a PEM private key.
+  if (!normalized.includes('-----BEGIN') || !normalized.includes('PRIVATE KEY') || !normalized.includes('-----END')) {
+    throw new Error(
+      'Invalid GOOGLE_PRIVATE_KEY format. Paste the service account JSON "private_key" value (PEM), keep literal \\n sequences, and do not wrap it in quotes.'
+    );
+  }
+
+  return normalized;
+}
+
+function isPrivateKeyDecodeError(message: string): boolean {
+  const m = (message ?? '').toLowerCase();
+  return m.includes('decoder routines::unsupported') || m.includes('error:1e08010c');
 }
 
 function rowsFromValues(values: unknown[][]): Record<string, string>[] {
@@ -104,6 +124,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ listings });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
+    if (isPrivateKeyDecodeError(message)) {
+      res.status(500).json({
+        error:
+          'Could not decode GOOGLE_PRIVATE_KEY. Make sure it is the PEM private key from the Google service account JSON (it should contain BEGIN/END PRIVATE KEY) and that in Vercel it is stored with literal \\n sequences (no surrounding quotes).',
+        details: message,
+      });
+      return;
+    }
     res.status(500).json({ error: message });
   }
 }

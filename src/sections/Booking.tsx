@@ -69,6 +69,8 @@ export default function Booking(): JSX.Element {
   const appMode = String((import.meta as any).env?.VITE_MODE ?? (import.meta as any).env?.MODE ?? '').toUpperCase();
   const isDev = appMode === 'DEV';
 
+  const isNotFound = (msg: string | undefined) => (msg ?? '').includes('404');
+
   useEffect(() => {
     const ctrl = new AbortController();
     getBookingOverrides(ctrl.signal)
@@ -164,6 +166,9 @@ export default function Booking(): JSX.Element {
             {isDev ? (
               <>
                 {t('booking.error')}: {overridesResult.error}
+                {isNotFound(overridesResult.error) ? (
+                  <div className="mt-1 text-red-800/90">{t('booking.contactError')}</div>
+                ) : null}
               </>
             ) : (
               <>{t('booking.contactError')}</>

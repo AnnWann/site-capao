@@ -49,6 +49,8 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
   const appMode = String((import.meta as any).env?.VITE_MODE ?? (import.meta as any).env?.MODE ?? '').toUpperCase();
   const isDev = appMode === 'DEV';
 
+  const isNotFound = (msg: string | null) => (msg ?? '').includes('404');
+
   return (
     <div className="min-h-screen w-full bg-neutral-100 text-neutral-900">
       <Navbar
@@ -67,10 +69,13 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
 
           <div className="mt-10">
             {error && (
-              <div className="bg-white rounded-2xl shadow-lg p-4 text-center text-red-700">
+              <div
+                className={`bg-white rounded-2xl shadow-lg p-4 text-center ${isDev ? 'text-red-700' : 'text-neutral-700'}`}
+              >
                 {isDev ? (
                   <>
                     {t('voluntary.error')}: {error}
+                    {isNotFound(error) ? <div className="mt-1 text-red-700/90">{t('voluntary.contactError')}</div> : null}
                   </>
                 ) : (
                   <>

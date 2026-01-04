@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { google } from 'googleapis';
-import { isPrivateKeyDecodeError, normalizePrivateKey } from './util.js';
+import { assertPrivateKeyDecodable, isPrivateKeyDecodeError, normalizePrivateKey } from './util.js';
 
 type Locale = 'pt-BR' | 'en-US' | 'es-ES';
 
@@ -148,6 +148,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const clientEmail = requireEnv('GOOGLE_SERVICE_ACCOUNT_EMAIL');
     const privateKey = normalizePrivateKey(requireEnv('GOOGLE_PRIVATE_KEY'));
+    assertPrivateKeyDecodable(privateKey);
 
     const auth = new google.auth.JWT({
       email: clientEmail,

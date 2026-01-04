@@ -1,3 +1,5 @@
+import { createPrivateKey } from 'crypto';
+
 export function normalizePrivateKey(key: string): string {
   let v = (key ?? '').trim();
 
@@ -41,4 +43,21 @@ export function normalizePrivateKey(key: string): string {
 export function isPrivateKeyDecodeError(message: string): boolean {
   const m = (message ?? '').toLowerCase();
   return m.includes('decoder routines::unsupported') || m.includes('error:1e08010c');
+}
+
+export function assertPrivateKeyDecodable(pem: string): void {
+  try {
+    // Will throw if OpenSSL cannot parse the key.
+    createPrivateKey({ key: pem });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    const header = pem.split('\n')[0] ?? '';
+    const footer = pem.trim().split('\n').slice(-1)[0] ?? '';
+    throw new Error(
+      `GOOGLE_PRIVATE_KEY is present but OpenSSL could not decode it. ` +
+        `Header="${header}", Footer="${footer}", Length=${pem.length}. ` +
+        `This usually means the key was pasted with hidden characters/extra backslashes, or it's not a standard service-account JSON PEM (regenerate a new JSON key in Google Cloud and paste its "private_key"). ` +
+        `Details: ${msg}`
+    );
+  }
 }

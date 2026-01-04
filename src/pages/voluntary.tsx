@@ -32,8 +32,9 @@ export default function VoluntaryPage({ locale, setLocale }: Props): JSX.Element
         // Treat "successful but empty" as an error (same UX as a failed API call).
         if (!Array.isArray(data) || data.length === 0) {
           throw new Error('No opportunities returned from API');
-        }
+        }else{
         setItems(data);
+        }
       })
       .catch((e) => setError(e instanceof Error ? e.message : 'Error'));
     return () => ctrl.abort();

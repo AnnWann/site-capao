@@ -30,14 +30,18 @@ const SAMPLE_ITEMS: VoluntaryOpportunity[] = [
   },
 ];
 
-function isDevMode(): boolean {
-  const raw = (import.meta as any).env?.VITE_MODE ?? (import.meta as any).env?.MODE ?? (import.meta as any).env?.mode;
-  if (!raw) return false;
-  return String(raw).toUpperCase() === 'DEV';
+function isLocalhost(): boolean {
+  try {
+    if (typeof window === 'undefined') return false;
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  } catch {
+    return false;
+  }
 }
 
 export async function fetchVoluntaryOpportunities(signal?: AbortSignal): Promise<VoluntaryOpportunity[]> {
-  if (isDevMode()) return SAMPLE_ITEMS;
+  // Only use local sample data during local development.
+  if (import.meta.env.DEV || isLocalhost()) return SAMPLE_ITEMS;
 
   const tryFetch = async (url: string) => {
     const res = await fetch(url, { method: 'GET', signal });

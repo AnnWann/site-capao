@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { google } from 'googleapis';
-import { isPrivateKeyDecodeError, normalizePrivateKey } from './util';
+import { isPrivateKeyDecodeError, normalizePrivateKey } from './util.js';
 
 type BookingMode = 'full' | 'doubleFront' | 'doubleBack' | 'ensuite';
 

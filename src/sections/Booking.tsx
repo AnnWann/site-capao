@@ -2,7 +2,7 @@ import { type JSX, useEffect, useMemo, useState } from 'react';
 import { useLocale } from '../contexts/LocaleContext';
 import BookingDetails from '../components/BookingDetails';
 import ModeSwitcher from '../components/ModeSwitcher';
-import { getBookingOverrides, pickLocalized, type BookingListingOverride, type BookingMode as BookingModeType, type BookingOverridesResult } from '../util/booking';
+import { getBookingOverrides, type BookingListingOverride, type BookingMode as BookingModeType, type BookingOverridesResult } from '../util/booking';
 
 type BookingMode = 'full' | 'doubleFront' | 'doubleBack' | 'ensuite';
 
@@ -62,7 +62,7 @@ type BookingMode = 'full' | 'doubleFront' | 'doubleBack' | 'ensuite';
 // };
 
 export default function Booking(): JSX.Element {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const [mode, setMode] = useState<BookingMode>('full');
   const [overridesResult, setOverridesResult] = useState<BookingOverridesResult | null>(null);
 
@@ -130,10 +130,6 @@ export default function Booking(): JSX.Element {
       const ov = o[key];
       return {
         ...base,
-        title: pickLocalized(locale, ov?.title) ?? base.title,
-        includes: pickLocalized(locale, ov?.includes) ?? base.includes,
-        ideal: pickLocalized(locale, ov?.ideal) ?? base.ideal,
-        image: ov?.imageUrl || base.image,
         price: ov?.price || base.price,
         minStay: typeof ov?.minStay === 'number' ? ov.minStay : base.minStay,
         airbnbUrl: ov?.airbnbUrl || base.airbnbUrl,
@@ -147,7 +143,7 @@ export default function Booking(): JSX.Element {
       doubleBack: merge('doubleBack'),
       ensuite: merge('ensuite'),
     } as const;
-  }, [DEFAULTS, locale, overridesResult]);
+  }, [DEFAULTS, overridesResult]);
 
   return (
     <section id="booking" className="w-full flex flex-col items-center justify-center min-h-screen relative px-6 pt-24 pb-10 sm:pt-12 bg-neutral-100">

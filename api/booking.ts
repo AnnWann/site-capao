@@ -1,22 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { google } from 'googleapis';
 
-type Locale = 'pt-BR' | 'en-US' | 'es-ES';
-
-type Localized = Record<Locale, string>;
-
 type BookingMode = 'full' | 'doubleFront' | 'doubleBack' | 'ensuite';
 
 export type BookingListing = {
   mode: BookingMode;
-  imageUrl?: string;
   price?: string;
   minStay?: number;
   airbnbUrl?: string;
   bookingUrl?: string;
-  title?: Localized;
-  includes?: Localized;
-  ideal?: Localized;
 };
 
 function requireEnv(name: string): string {
@@ -27,26 +19,6 @@ function requireEnv(name: string): string {
 
 function normalizePrivateKey(key: string): string {
   return key.replace(/\\n/g, '\n');
-}
-
-function extractDriveFileId(input: string): string | null {
-  const trimmed = (input ?? '').trim();
-  if (!trimmed) return null;
-  if (/^[a-zA-Z0-9_-]{20,}$/.test(trimmed) && !trimmed.startsWith('http')) return trimmed;
-  const m1 = trimmed.match(/\/file\/d\/([^/]+)/);
-  if (m1?.[1]) return m1[1];
-  const m2 = trimmed.match(/[?&]id=([^&]+)/);
-  if (m2?.[1]) return m2[1];
-  return null;
-}
-
-function normalizeImageUrl(value: string): string {
-  const v = (value ?? '').trim();
-  if (!v) return '';
-  if (v.startsWith('http') && !v.includes('drive.google.com')) return v;
-  const fileId = extractDriveFileId(v);
-  if (!fileId) return v;
-  return `https://drive.google.com/uc?export=view&id=${fileId}`;
 }
 
 function rowsFromValues(values: unknown[][]): Record<string, string>[] {
@@ -81,33 +53,14 @@ function parseMinStay(v: string): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
-function toLocalized(row: Record<string, string>, prefix: string): Localized | undefined {
-  const pt = get(row, `${prefix}_pt_br`);
-  const en = get(row, `${prefix}_en_us`);
-  const es = get(row, `${prefix}_es_es`);
-  if (!pt && !en && !es) return undefined;
-  return {
-    'pt-BR': pt,
-    'en-US': en,
-    'es-ES': es,
-  };
-}
-
 function rowToListing(row: Record<string, string>): BookingListing {
   const mode = parseMode(get(row, 'mode'));
-  const imageRaw = get(row, 'image');
-  const imageUrl = imageRaw ? normalizeImageUrl(imageRaw) : undefined;
-
   return {
     mode,
-    imageUrl,
     price: get(row, 'price') || undefined,
     minStay: parseMinStay(get(row, 'min_stay')),
     airbnbUrl: get(row, 'airbnb_url') || undefined,
     bookingUrl: get(row, 'booking_url') || undefined,
-    title: toLocalized(row, 'title'),
-    includes: toLocalized(row, 'includes'),
-    ideal: toLocalized(row, 'ideal'),
   };
 }
 

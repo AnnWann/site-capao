@@ -78,19 +78,16 @@ Required columns:
 
 Optional columns:
 
-- `image` (string; URL or Drive id/link)
 - `price` (string)
 - `min_stay` (number)
 - `airbnb_url` (string)
 - `booking_url` (string)
 
-Localized optional columns (any/all can be empty):
-
-- `title_pt_br`, `title_en_us`, `title_es_es`
-- `includes_pt_br`, `includes_en_us`, `includes_es_es`
-- `ideal_pt_br`, `ideal_en_us`, `ideal_es_es`
-
 Notes:
 
 - If `min_stay` is missing/invalid, it’s omitted from the API response.
 - If you have multiple rows with the same `mode`, the last one read wins.
+
+UI defaults:
+
+- `title`, `image`, `includes`, and `ideal` are always taken from the site defaults/translations (not from the sheet).

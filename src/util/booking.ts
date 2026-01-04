@@ -1,17 +1,11 @@
-export type Locale = 'pt-BR' | 'en-US' | 'es-ES';
 export type BookingMode = 'full' | 'doubleFront' | 'doubleBack' | 'ensuite';
-export type Localized = Record<Locale, string>;
 
 export type BookingListingOverride = {
   mode: BookingMode;
-  imageUrl?: string;
   price?: string;
   minStay?: number;
   airbnbUrl?: string;
   bookingUrl?: string;
-  title?: Localized;
-  includes?: Localized;
-  ideal?: Localized;
 };
 
 export type BookingOverridesResponse = {
@@ -75,9 +69,4 @@ export async function getBookingOverrides(signal?: AbortSignal): Promise<Booking
     if (import.meta.env.DEV || isLocalhost()) return { listings: SAMPLE.listings, source: 'sample', error: msg };
     return { listings: {}, source: 'empty', error: msg };
   }
-}
-
-export function pickLocalized(locale: Locale, value?: Localized): string | undefined {
-  if (!value) return undefined;
-  return (value[locale] ?? value['pt-BR'] ?? value['en-US'] ?? value['es-ES'] ?? '').trim() || undefined;
 }

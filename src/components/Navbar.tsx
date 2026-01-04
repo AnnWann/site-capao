@@ -37,7 +37,9 @@ export default function Navbar({ locale, currentSection, onNavigate, onLocaleCha
       aria-hidden={currentSection === 'home'}
       className={`fixed top-0 left-0 w-full py-4 z-50 flex items-center justify-between px-4 ${currentSection !== 'home' ? 'bg-green-800 text-white shadow-md' : 'bg-transparent text-white pointer-events-none select-none opacity-0'}`}>
       <div className="flex items-center gap-6">
-        <div className="text-lg font-bold">Pousada Espaço Gaia</div>
+        <Link to={{ pathname: '/', hash: '#home' }} className="text-lg font-bold">
+          Pousada Espaço Gaia
+        </Link>
       </div>
 
       {/* Mobile: show section title to the left of the hamburger, within the right-side group */}

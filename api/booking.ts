@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { google } from 'googleapis';
+import { isPrivateKeyDecodeError, normalizePrivateKey } from './util';
 
 type BookingMode = 'full' | 'doubleFront' | 'doubleBack' | 'ensuite';
 
@@ -15,30 +16,6 @@ function requireEnv(name: string): string {
   const v = process.env[name];
   if (!v) throw new Error(`Missing env var: ${name}`);
   return v;
-}
-
-function normalizePrivateKey(key: string): string {
-  const trimmed = (key ?? '').trim();
-  const unquoted =
-    (trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))
-      ? trimmed.slice(1, -1)
-      : trimmed;
-
-  const normalized = unquoted.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n').trim();
-
-  // Guardrail: key must be a PEM private key.
-  if (!normalized.includes('-----BEGIN') || !normalized.includes('PRIVATE KEY') || !normalized.includes('-----END')) {
-    throw new Error(
-      'Invalid GOOGLE_PRIVATE_KEY format. Paste the service account JSON "private_key" value (PEM), keep literal \\n sequences, and do not wrap it in quotes.'
-    );
-  }
-
-  return normalized;
-}
-
-function isPrivateKeyDecodeError(message: string): boolean {
-  const m = (message ?? '').toLowerCase();
-  return m.includes('decoder routines::unsupported') || m.includes('error:1e08010c');
 }
 
 function rowsFromValues(values: unknown[][]): Record<string, string>[] {

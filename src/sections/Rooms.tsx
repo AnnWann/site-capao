@@ -18,37 +18,39 @@ export default function Rooms(): JSX.Element {
   // We'll use the reusable Carousel component for mobile
 
   return (
-    <section id="rooms" className="h-screen w-full flex flex-col justify-center relative max-w-5xl mx-auto px-6 bg-neutral-100">
-      <h2 className="text-3xl font-bold mb-6 text-center hidden sm:block">{t('nav.rooms')}</h2>
+    <section id="rooms" className="min-h-screen w-full flex items-center justify-center relative bg-neutral-100">
+      <div className="max-w-5xl mx-auto w-full px-6 pt-20 pb-8">
+        <h2 className="text-3xl font-bold mb-6 text-center hidden sm:block">{t('nav.rooms')}</h2>
 
-      {/* Mobile carousel */}
-      <div className="md:hidden">
-        <div className="max-w-lg mx-auto">
-          <Carousel
-            items={items}
-            renderItem={(it) => (
-              <Card src={it.src} title={it.title} heightClass={'h-64'} />
-            )}
-            heightClass="h-64"
-            interval={3500}
-            showArrows={true}
-            showDots={true}
-          />
-        </div>
-      </div>
-
-      {/* Desktop grid uses the same `items` array so sources are consistent */}
-      <div className="hidden md:block">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {items.slice(0, 2).map((it, i) => (
-            <Card key={i} src={it.src} title={it.title} heightClass={it.heightClass ?? 'h-64'} />
-          ))}
+        {/* Mobile carousel */}
+        <div className="md:hidden">
+          <div className="max-w-lg mx-auto">
+            <Carousel
+              items={items}
+              renderItem={(it) => (
+                <Card src={it.src} title={it.title} heightClass={'h-64'} />
+              )}
+              heightClass="h-64"
+              interval={3500}
+              showArrows={true}
+              showDots={true}
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
-          {items.slice(2).map((it, i) => (
-            <Card key={i} src={it.src} title={it.title} heightClass={it.heightClass ?? 'h-48'} />
-          ))}
+        {/* Desktop grid uses the same `items` array so sources are consistent */}
+        <div className="hidden md:block">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {items.slice(0, 2).map((it, i) => (
+              <Card key={i} src={it.src} title={it.title} heightClass={it.heightClass ?? 'h-64'} />
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
+            {items.slice(2).map((it, i) => (
+              <Card key={i} src={it.src} title={it.title} heightClass={it.heightClass ?? 'h-48'} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

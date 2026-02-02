@@ -1,7 +1,8 @@
-import { type JSX, useState } from 'react';
+import { type JSX, useEffect, useMemo, useState } from 'react';
 import { useLocale } from '../contexts/LocaleContext';
 import BookingDetails from '../components/BookingDetails';
 import ModeSwitcher from '../components/ModeSwitcher';
+import { getBookingOverrides, type BookingListingOverride, type BookingMode as BookingModeType, type BookingOverridesResult } from '../util/booking';
 
 type BookingMode = 'full' | 'doubleFront' | 'doubleBack' | 'ensuite';
 
@@ -63,9 +64,23 @@ type BookingMode = 'full' | 'doubleFront' | 'doubleBack' | 'ensuite';
 export default function Booking(): JSX.Element {
   const { t } = useLocale();
   const [mode, setMode] = useState<BookingMode>('full');
+  const [overridesResult, setOverridesResult] = useState<BookingOverridesResult | null>(null);
+
+  const appMode = String((import.meta as any).env?.VITE_MODE ?? (import.meta as any).env?.MODE ?? '').toUpperCase();
+  const isDev = appMode === 'DEV';
+
+  const isNotFound = (msg: string | undefined) => (msg ?? '').includes('404');
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    getBookingOverrides(ctrl.signal)
+      .then((data) => setOverridesResult(data))
+      .catch((e) => setOverridesResult({ listings: {}, source: 'empty', error: e instanceof Error ? e.message : 'Error' }));
+    return () => ctrl.abort();
+  }, []);
 
   // Build listings here so we can use translations from `t()` as default sentences
-  const LISTINGS = {
+  const DEFAULTS = {
     full: {
       title: t('listing.full.title'),
       image: '/fotos/CasaCompleta3.avif',
@@ -108,11 +123,54 @@ export default function Booking(): JSX.Element {
     },
   } as const;
 
+  const LISTINGS = useMemo(() => {
+    const o: Partial<Record<BookingModeType, BookingListingOverride>> = overridesResult?.listings ?? {};
+    const merge = (key: BookingModeType) => {
+      const base = DEFAULTS[key];
+      const ov = o[key];
+      return {
+        ...base,
+        price: ov?.price || base.price,
+        minStay: typeof ov?.minStay === 'number' ? ov.minStay : base.minStay,
+        airbnbUrl: ov?.airbnbUrl || base.airbnbUrl,
+        bookingUrl: ov?.bookingUrl ?? base.bookingUrl,
+      };
+    };
+
+    return {
+      full: merge('full'),
+      doubleFront: merge('doubleFront'),
+      doubleBack: merge('doubleBack'),
+      ensuite: merge('ensuite'),
+    } as const;
+  }, [DEFAULTS, overridesResult]);
+
   return (
     <section id="booking" className="w-full flex flex-col items-center justify-center min-h-screen relative px-6 pt-24 pb-10 sm:pt-12 bg-neutral-100">
       <h2 className="hidden sm:block text-3xl font-bold text-center mb-6 w-full max-w-2xl">{t('nav.booking')}</h2>
 
-      <div className="bg-white rounded-2xl shadow-lg p-8 pb-16 text-center max-w-2xl w-full overflow-hidden relative">
+      <div className="bg-white rounded-2xl shadow-lg p-8 pb-16 text-center max-w-2xl w-full overflow-hidden relative flex flex-col h-full min-h-[360px] sm:min-h-0 max-h-[calc(100vh-6.5rem)]">
+
+        {overridesResult?.source === 'sample' && (
+          <div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-left text-sm text-red-800">
+            {t('booking.devWarning')}
+          </div>
+        )}
+
+        {overridesResult?.source === 'empty' && overridesResult?.error && (
+          <div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-left text-sm text-red-800">
+            {isDev ? (
+              <>
+                {t('booking.error')}: {overridesResult.error}
+                {isNotFound(overridesResult.error) ? (
+                  <div className="mt-1 text-red-800/90">{t('booking.contactError')}</div>
+                ) : null}
+              </>
+            ) : (
+              <>{t('booking.contactError')}</>
+            )}
+          </div>
+        )}
 
         <ModeSwitcher
           modes={[
@@ -126,9 +184,11 @@ export default function Booking(): JSX.Element {
         />
 
         {/** use LISTINGS to pick the right listing config for the selected mode */}
-        <BookingDetails
-          {...LISTINGS[mode]}
-        />
+        <div className="flex-1 min-h-0">
+          <BookingDetails
+            {...LISTINGS[mode]}
+            />
+        </div>
 
         {/* Bottom-right note about where reservations are completed (inside card) */}
           <div className="absolute left-4 right-4 bottom-6 z-20">

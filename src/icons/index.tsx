@@ -10,6 +10,7 @@ import { Bed, Wifi, MapPin, Leaf, Users, PawPrint,
   ShowerHead,
   FlameKindling,
   Columns4,
+  Table,
   Telescope,
   Waves,
   Footprints} from 'lucide-react';
@@ -79,6 +80,8 @@ export function porchIcon(): JSX.Element { return <Telescope size={20} className
 export function waterIcon(): JSX.Element { return <Waves size={20} className={defaultClass} strokeWidth={1.5} aria-hidden />; }
 export function walkIcon(): JSX.Element { return <Footprints size={20} className={defaultClass} strokeWidth={1.5} aria-hidden />; }
 
+export function tableIcon(): JSX.Element { return <Table size={20} className={defaultClass} strokeWidth={1.5} aria-hidden />; }
+
 export default {
   SleepIcon,
   WifiIcon,
@@ -112,4 +115,5 @@ export default {
   porchIcon,
   waterIcon,
   walkIcon,
+  tableIcon,
 };

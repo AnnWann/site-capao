@@ -3,6 +3,11 @@ html, body, #root { height: 100%; margin: 0; padding: 0; }
 body { overflow: hidden; }
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Accessibility: bump overall scale on desktop (Tailwind uses rem). */
+@media (min-width: 1024px) {
+	html { font-size: 18px; }
+}
+
 /* Ensure sections strictly fit the container to avoid tiny overflows during transforms */
 .section { position: absolute; inset: 0; will-change: transform, opacity; width: 100%; height: 100%; }
 
